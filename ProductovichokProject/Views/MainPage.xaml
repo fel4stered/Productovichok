@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProductovichokProject.MainPage"
+             xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             x:DataType="viewmodel:MainViewModel">
+
+    <ScrollView>
+        <Grid RowDefinitions="0.08*,*">
+            <Grid Grid.Row="0">
+                <BoxView Grid.ColumnSpan="3"
+                         Color="{StaticResource Primary}"/>
+                <Label Text="Продуктовичок"
+                       Grid.Column="0"
+                       FontSize="Medium"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"
+                       Margin="50,0,0,0"/>
+            </Grid>
+            <VerticalStackLayout 
+                Grid.Row="1"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand"
+                Spacing="10"
+                WidthRequest="300">
+                <Image
+                    MaximumHeightRequest="250"
+                    MaximumWidthRequest="250"
+                    Source="telegram_app.png"
+                    Aspect="AspectFit"/>
+                <Label
+                    HorizontalOptions="CenterAndExpand"
+                    Text="ПродуктовичокBot"
+                    FontSize="Medium"
+                    TextColor="DeepSkyBlue"
+                    FontAutoScalingEnabled="True">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LinkCommand}"
+                                          CommandParameter="https://t.me/ProductovichokBot" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Text="Для регистрации и получения кода авторизации обратитесь к нашему боту."
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
+                <Entry Placeholder="Телеграм никнейм"
+                       PlaceholderColor="{StaticResource Gray400}"
+                       Text="{Binding Nickname}"/>
+                <Entry Placeholder="Код"
+                       PlaceholderColor="{StaticResource Gray400}"
+                       Keyboard="Numeric"
+                       Text="{Binding Code}"/>
+                <Button Text="Авторизироваться"
+                        Command="{Binding SignInCommand}"/>
+                <Label Text="{Binding Result}"/>
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>
