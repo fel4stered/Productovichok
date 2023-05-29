@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProductovichokProject.Services;
+using ProductovichokProject.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,22 +27,25 @@ namespace ProductovichokProject.ViewModels
         [ObservableProperty]
         string code;
         [ObservableProperty]
-        string result = "не вошёл";
+        string error = "";
 
         [RelayCommand]
         async void SignIn()
         {
+#if ANDROID
+    await Shell.Current.GoToAsync(nameof(ClientMainPage));
+#endif
             if (Nickname is not null)
             {
                 if (int.TryParse(Code, out var CodeInt))
                 {
                     if (await _userService.Authorization(Nickname, CodeInt))
                     {
-                        Result = "Вошёл";
+                        await Shell.Current.GoToAsync(nameof(ClientMainPage));
                     }
                     else
                     {
-                        Result = "ne Вошёл";
+                        Error = "Ошибка авторизации! Проверьте правильность написания логина и кода.";
                     }
                 }
             }

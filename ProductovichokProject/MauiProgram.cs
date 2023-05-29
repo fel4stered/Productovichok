@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using ProductovichokProject.Data;
 using ProductovichokProject.Services;
 using ProductovichokProject.ViewModels;
+using ProductovichokProject.Views;
 
 namespace ProductovichokProject
 {
@@ -36,14 +37,22 @@ namespace ProductovichokProject
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            #region Services
+
+            #region Pages and ViewModels
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainViewModel>();
 
+            builder.Services.AddTransient<ClientMainPage>();
+            builder.Services.AddTransient<ClientMainViewModel>(); 
+            #endregion
+
             builder.Services.AddSingleton<UserService>();
-            builder.Services.AddSingleton<ProductovichokContext>();
+            builder.Services.AddSingleton<ProductovichokContext>();  
+            #endregion
 
 #if DEBUG
-		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

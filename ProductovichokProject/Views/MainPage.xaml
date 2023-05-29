@@ -4,7 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProductovichokProject.MainPage"
              xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
-             x:DataType="viewmodel:MainViewModel">
+             x:DataType="viewmodel:MainViewModel"
+             >
 
     <ScrollView>
         <Grid RowDefinitions="0.08*,*">
@@ -53,7 +54,7 @@
                        Text="{Binding Code}"/>
                 <Button Text="Авторизироваться"
                         Command="{Binding SignInCommand}"/>
-                <Label Text="{Binding Result}"/>
+                <Label Text="{Binding Error}"/>
             </VerticalStackLayout>
         </Grid>
     </ScrollView>

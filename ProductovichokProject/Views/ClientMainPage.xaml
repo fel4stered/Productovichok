@@ -1,12 +1,116 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             x:DataType="viewmodel:ClientMainViewModel"
              x:Class="ProductovichokProject.Views.ClientMainPage"
              Title="ClientMainPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <Grid RowDefinitions="0.1*,auto,*" >
+        <Grid Grid.Row="0" ColumnDefinitions="*, *, *">
+            <BoxView Grid.ColumnSpan="3"
+                         Color="{StaticResource Primary}"/>
+            <Label Text="Продуктовичок"
+                       Grid.Column="0"
+                       FontSize="Medium"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"
+                       Margin="50,0,0,0"/>
+
+            <HorizontalStackLayout
+                Grid.Column="1"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                
+                <Image
+                    Source="location.png"
+                    Aspect="Center"/>
+
+                <Picker
+                    Style="{StaticResource AddressPicker}"
+                    SelectedIndex="0">
+                    <Picker.Items>
+                        <x:String>Добавить адрес</x:String>
+                    </Picker.Items>
+                </Picker>
+            </HorizontalStackLayout>
+
+            <ImageButton
+                CornerRadius="50"
+                VerticalOptions="Center"
+                Padding="5"
+                Margin="0,0,10,0"
+                HorizontalOptions="EndAndExpand"
+                Aspect="Center"
+                Grid.Column="2"
+                Source="user.png"/>
+        </Grid>
+
+        <ScrollView
+                Padding="10,0,10,0"
+                Grid.Row="1" VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Orientation="Horizontal">
+            <HorizontalStackLayout
+                    RadioButtonGroup.GroupName="MenuCategory"
+                    Spacing="5">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton Content="{Binding .}" Value="{Binding .}">
+                            <RadioButton.ControlTemplate>
+                                <ControlTemplate>
+                                    <Border HeightRequest="40" x:Name="Indicator" BackgroundColor="{StaticResource Secondary}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="15"/>
+                                        </Border.StrokeShape>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroupList>
+                                                <VisualStateGroup x:Name="CheckedStates">
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter
+                                                                TargetName="Indicator"
+                                                                Property="Border.BackgroundColor"
+                                                                Value="{StaticResource Primary}"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter
+                                                                    TargetName="Indicator"
+                                                                    Property="Border.BackgroundColor"
+                                                                    Value="{StaticResource Secondary}"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateGroupList>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <Label Text="{TemplateBinding Content}" Margin="10" Padding="3" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" LineBreakMode="NoWrap" VerticalOptions="Center" HorizontalOptions="Center" TextColor="White" x:Name="TextLabel" />
+                                    </Border>
+                                </ControlTemplate>
+                            </RadioButton.ControlTemplate>
+                        </RadioButton>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+                <BindableLayout.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Молочные продукты</x:String>
+                        <x:String>Мясо</x:String>
+                        <x:String>Рыба</x:String>
+                        <x:String>Яйца</x:String>
+                        <x:String>Майонезы и соусы</x:String>
+                        <x:String>Бакалея</x:String>
+                        <x:String>Кофе и чай</x:String>
+                        <x:String>Напитки</x:String>
+                    </x:Array>
+                </BindableLayout.ItemsSource>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <CollectionView Grid.Row="2">
+            
+        </CollectionView>
+    </Grid>
 </ContentPage>
