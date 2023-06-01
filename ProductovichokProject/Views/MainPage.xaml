@@ -5,6 +5,7 @@
              x:Class="ProductovichokProject.MainPage"
              xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
              x:DataType="viewmodel:MainViewModel"
+             MinimumWidthRequest="500"
              >
 
     <ScrollView>

@@ -1,4 +1,6 @@
-﻿namespace ProductovichokProject
+﻿using Microsoft.Maui.Platform;
+
+namespace ProductovichokProject
 {
     public partial class App : Application
     {
@@ -7,6 +9,19 @@
             InitializeComponent();
 
             MainPage = new AppShell();
+        }
+
+        protected override Window CreateWindow(IActivationState activationState)
+        {
+            var window = base.CreateWindow(activationState);
+
+            const int minWidth = 1200;
+            const int minHeight = 800;
+
+            window.MinimumHeight = minHeight;
+            window.MinimumWidth = minWidth;
+
+            return window;
         }
     }
 }

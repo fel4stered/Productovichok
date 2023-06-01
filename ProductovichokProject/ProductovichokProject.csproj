@@ -48,6 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\add_cart.svg" />
 	  <None Remove="Resources\Images\location.svg" />
 	  <None Remove="Resources\Images\telegram_app.svg" />
 	  <None Remove="Resources\Images\user.svg" />

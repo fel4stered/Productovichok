@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             xmlns:model="clr-namespace:ProductovichokProject.Data.Models"
              x:DataType="viewmodel:ClientMainViewModel"
              x:Class="ProductovichokProject.Views.ClientMainPage"
              Title="ClientMainPage">
@@ -27,12 +28,12 @@
                     Source="location.png"
                     Aspect="Center"/>
 
-                <Picker
+                <Picker 
                     Style="{StaticResource AddressPicker}"
-                    SelectedIndex="0">
-                    <Picker.Items>
-                        <x:String>Добавить адрес</x:String>
-                    </Picker.Items>
+                    >
+                </Picker>
+                <Picker>
+                    
                 </Picker>
             </HorizontalStackLayout>
 
@@ -54,7 +55,7 @@
                 Orientation="Horizontal">
             <HorizontalStackLayout
                     RadioButtonGroup.GroupName="MenuCategory"
-                    Spacing="5">
+                    Spacing="10">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <RadioButton Content="{Binding .}" Value="{Binding .}">
@@ -109,8 +110,25 @@
             </HorizontalStackLayout>
         </ScrollView>
 
-        <CollectionView Grid.Row="2">
-            
+        <CollectionView ItemsLayout="VerticalGrid,4" ItemsSource="{Binding Products}" Grid.Row="2">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type model:Product}">
+                    <VerticalStackLayout Margin="10">
+                        <Image HeightRequest="250" WidthRequest="250" Source="{Binding ImageUrl}"/>
+                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" MaxLines="2" LineBreakMode="WordWrap" HorizontalOptions="Center"  TextColor="Black" Text="{Binding ProductName}"/>
+                        <Grid ColumnSpacing="10" HorizontalOptions="Center" ColumnDefinitions="2*,0.6*">
+                            <Grid ColumnSpacing="10" ColumnDefinitions="2*,1*">
+                                <BoxView Grid.ColumnSpan="2"
+                                         CornerRadius="50"
+                                         Color="{StaticResource Secondary}"/>
+                                <Label Margin="15,5,0,5" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" FontAttributes="Bold" FontSize="Small" TextColor="White" Text="{Binding Price}"/>
+                                <Image Margin="0,5,15,5" HorizontalOptions="End" VerticalOptions="Center" Grid.Column="1" Aspect="Center" Source="add_cart.png"/>
+                            </Grid>
+                            <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Column="1" Text="XXX мл"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
         </CollectionView>
     </Grid>
 </ContentPage>
