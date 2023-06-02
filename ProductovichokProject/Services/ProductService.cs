@@ -21,7 +21,7 @@ namespace ProductovichokProject.Services
 
         public async Task<ObservableCollection<Product>> GetProducts()
         {
-            ObservableCollection<Product> products = new ObservableCollection<Product>(_context.Products.ToList()); 
+            ObservableCollection<Product> products = new ObservableCollection<Product>( _context.Products.ToList()); 
             return products;
         }
     }

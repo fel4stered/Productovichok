@@ -14,17 +14,7 @@ namespace ProductovichokProject
         public static MauiApp CreateMauiApp()
         {
 
-            #region ConnectDB
-            var connectionString = "server=loacalhost;user=root;password=1234;database=productovichok";
-            var services = new ServiceCollection();
-            services.AddDbContext<ProductovichokContext>(
-                dbContextOptions => dbContextOptions
-                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                    .LogTo(Console.WriteLine, LogLevel.Information)
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors()
-            );
-            #endregion
+           
             
             var builder = MauiApp.CreateBuilder();
             builder
@@ -38,7 +28,16 @@ namespace ProductovichokProject
                 });
 
             #region Services
-
+            #region ConnectDB
+            var connectionString = "server=localhost;user=root;password=1234;database=productovichok";
+            builder.Services.AddDbContext<ProductovichokContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                    .LogTo(Console.WriteLine, LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+            );
+            #endregion
             #region Pages and ViewModels
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainViewModel>();
@@ -48,8 +47,8 @@ namespace ProductovichokProject
             #endregion
 
             builder.Services.AddSingleton<UserService>();
-            builder.Services.AddSingleton<ProductovichokContext>();
             builder.Services.AddSingleton<ProductService>();
+            builder.Services.AddSingleton<CategoryService>();
             #endregion
 
 #if DEBUG

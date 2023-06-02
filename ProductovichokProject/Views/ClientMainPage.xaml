@@ -58,10 +58,11 @@
                 Orientation="Horizontal">
                 <HorizontalStackLayout
                     RadioButtonGroup.GroupName="MenuCategory"
+                    BindableLayout.ItemsSource="{Binding Categories}"
                     Spacing="10">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <RadioButton Content="{Binding .}" Value="{Binding .}">
+                        <DataTemplate x:DataType="{x:Type model:Category}">
+                            <RadioButton Content="{Binding CategoryName}" Value="{Binding .}">
                                 <RadioButton.ControlTemplate>
                                     <ControlTemplate>
                                         <Border HeightRequest="40" StrokeThickness="0" x:Name="Indicator" BackgroundColor="{StaticResource Secondary}">
@@ -98,18 +99,6 @@
                             </RadioButton>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
-                    <BindableLayout.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Молочные продукты</x:String>
-                            <x:String>Мясо</x:String>
-                            <x:String>Рыба</x:String>
-                            <x:String>Яйца</x:String>
-                            <x:String>Майонезы и соусы</x:String>
-                            <x:String>Бакалея</x:String>
-                            <x:String>Кофе и чай</x:String>
-                            <x:String>Напитки</x:String>
-                        </x:Array>
-                    </BindableLayout.ItemsSource>
                 </HorizontalStackLayout>
             </ScrollView >
             <Button 
