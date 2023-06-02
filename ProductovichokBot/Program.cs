@@ -13,7 +13,7 @@ internal class Program
     {
         Console.WriteLine("ПродуктовичокBot");
         #region ConnectDB
-        var connectionString = "server=172.17.142.180;user=root;password=1234;database=productovichok";
+        var connectionString = "server=localhost;user=root;password=1234;database=productovichok";
         var services = new ServiceCollection();
         services.AddDbContext<ProductovichokContext>(
             dbContextOptions => dbContextOptions
