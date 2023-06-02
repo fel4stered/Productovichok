@@ -16,7 +16,7 @@ namespace ProductovichokProject
             var window = base.CreateWindow(activationState);
 
             const int minWidth = 1200;
-            const int minHeight = 800;
+            const int minHeight = 930;
 
             window.MinimumHeight = minHeight;
             window.MinimumWidth = minWidth;

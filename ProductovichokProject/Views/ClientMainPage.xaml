@@ -7,7 +7,7 @@
              x:Class="ProductovichokProject.Views.ClientMainPage"
              Title="ClientMainPage">
 
-    <Grid RowDefinitions="0.1*,auto,*" >
+    <Grid RowSpacing="5" RowDefinitions="0.1*,auto,*" >
         <Grid Grid.Row="0" ColumnDefinitions="*, *, *">
             <BoxView Grid.ColumnSpan="3"
                          Color="{StaticResource Primary}"/>
@@ -48,83 +48,130 @@
                 Source="user.png"/>
         </Grid>
 
-        <ScrollView
-                Padding="10,0,10,0"
-                Grid.Row="1" VerticalOptions="Center"
+        <Grid Grid.Row="1">
+            <ScrollView
+                HorizontalScrollBarVisibility="Never"
+                x:Name="MenuScroll"
+                Padding="10,0,10,0" 
+                VerticalOptions="Center"
                 HorizontalOptions="Center"
                 Orientation="Horizontal">
-            <HorizontalStackLayout
+                <HorizontalStackLayout
                     RadioButtonGroup.GroupName="MenuCategory"
                     Spacing="10">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate>
-                        <RadioButton Content="{Binding .}" Value="{Binding .}">
-                            <RadioButton.ControlTemplate>
-                                <ControlTemplate>
-                                    <Border HeightRequest="40" x:Name="Indicator" BackgroundColor="{StaticResource Secondary}">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="15"/>
-                                        </Border.StrokeShape>
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroupList>
-                                                <VisualStateGroup x:Name="CheckedStates">
-                                                    <VisualState x:Name="Checked">
-                                                        <VisualState.Setters>
-                                                            <Setter
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Content="{Binding .}" Value="{Binding .}">
+                                <RadioButton.ControlTemplate>
+                                    <ControlTemplate>
+                                        <Border HeightRequest="40" StrokeThickness="0" x:Name="Indicator" BackgroundColor="{StaticResource Secondary}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="30"/>
+                                            </Border.StrokeShape>
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroupList>
+                                                    <VisualStateGroup x:Name="CheckedStates">
+                                                        <VisualState x:Name="Checked">
+                                                            <VisualState.Setters>
+                                                                <Setter
                                                                 TargetName="Indicator"
                                                                 Property="Border.BackgroundColor"
                                                                 Value="{StaticResource Primary}"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
+                                                            </VisualState.Setters>
+                                                        </VisualState>
 
-                                                    <VisualState x:Name="Unchecked">
-                                                        <VisualState.Setters>
-                                                            <Setter
+                                                        <VisualState x:Name="Unchecked">
+                                                            <VisualState.Setters>
+                                                                <Setter
                                                                     TargetName="Indicator"
                                                                     Property="Border.BackgroundColor"
                                                                     Value="{StaticResource Secondary}"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                </VisualStateGroup>
-                                            </VisualStateGroupList>
-                                        </VisualStateManager.VisualStateGroups>
-                                        <Label Text="{TemplateBinding Content}" Margin="10" Padding="3" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" LineBreakMode="NoWrap" VerticalOptions="Center" HorizontalOptions="Center" TextColor="White" x:Name="TextLabel" />
-                                    </Border>
-                                </ControlTemplate>
-                            </RadioButton.ControlTemplate>
-                        </RadioButton>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-                <BindableLayout.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Молочные продукты</x:String>
-                        <x:String>Мясо</x:String>
-                        <x:String>Рыба</x:String>
-                        <x:String>Яйца</x:String>
-                        <x:String>Майонезы и соусы</x:String>
-                        <x:String>Бакалея</x:String>
-                        <x:String>Кофе и чай</x:String>
-                        <x:String>Напитки</x:String>
-                    </x:Array>
-                </BindableLayout.ItemsSource>
-            </HorizontalStackLayout>
-        </ScrollView>
+                                                            </VisualState.Setters>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateGroupList>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <Label Text="{TemplateBinding Content}" Padding="25,0,25,0" VerticalTextAlignment="Center" FontSize="Small" HorizontalTextAlignment="Center" LineBreakMode="NoWrap" VerticalOptions="Center" HorizontalOptions="Center" TextColor="White" x:Name="TextLabel" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </RadioButton.ControlTemplate>
+                            </RadioButton>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Молочные продукты</x:String>
+                            <x:String>Мясо</x:String>
+                            <x:String>Рыба</x:String>
+                            <x:String>Яйца</x:String>
+                            <x:String>Майонезы и соусы</x:String>
+                            <x:String>Бакалея</x:String>
+                            <x:String>Кофе и чай</x:String>
+                            <x:String>Напитки</x:String>
+                        </x:Array>
+                    </BindableLayout.ItemsSource>
+                </HorizontalStackLayout>
+            </ScrollView >
+            <Button 
+                    Text=">"
+                    HorizontalOptions="EndAndExpand"
+                    VerticalOptions="Center"
+                    Command="{Binding ScrollForwardCommand}" 
+                    CommandParameter="{Binding Source={x:Reference MenuScroll}, Mode=OneWay}"/>
+        </Grid>
 
-        <CollectionView ItemsLayout="VerticalGrid,4" ItemsSource="{Binding Products}" Grid.Row="2">
+        <CollectionView 
+            ItemSizingStrategy="MeasureFirstItem"
+            ItemsLayout="VerticalGrid,4" 
+            ItemsSource="{Binding Products}" 
+            Grid.Row="2">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:Product}">
-                    <VerticalStackLayout Margin="10">
-                        <Image HeightRequest="250" WidthRequest="250" Source="{Binding ImageUrl}"/>
-                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" MaxLines="2" LineBreakMode="WordWrap" HorizontalOptions="Center"  TextColor="Black" Text="{Binding ProductName}"/>
-                        <Grid ColumnSpacing="10" HorizontalOptions="Center" ColumnDefinitions="2*,0.6*">
-                            <Grid ColumnSpacing="10" ColumnDefinitions="2*,1*">
+                    <VerticalStackLayout Spacing="10" Margin="10">
+                        <Image 
+                            HeightRequest="250" 
+                            WidthRequest="250" 
+                            Source="{Binding ImageUrl}"/>
+                        <Label 
+                            HorizontalTextAlignment="Center" 
+                            VerticalTextAlignment="Center" 
+                            MaxLines="2" 
+                            LineBreakMode="WordWrap" 
+                            HorizontalOptions="Center"  
+                            TextColor="{StaticResource Tertiary}" 
+                            Text="{Binding ProductName}"/>
+                        <Grid ColumnDefinitions="2*,0.6*" 
+                              ColumnSpacing="10" 
+                              HorizontalOptions="Center" >
+                            <Grid ColumnDefinitions="2*,1*" 
+                                  ColumnSpacing="10">
                                 <BoxView Grid.ColumnSpan="2"
                                          CornerRadius="50"
                                          Color="{StaticResource Secondary}"/>
-                                <Label Margin="15,5,0,5" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" FontAttributes="Bold" FontSize="Small" TextColor="White" Text="{Binding Price}"/>
-                                <Image Margin="0,5,15,5" HorizontalOptions="End" VerticalOptions="Center" Grid.Column="1" Aspect="Center" Source="add_cart.png"/>
+                                <Label
+                                    Margin="15,0,5,0" 
+                                    VerticalTextAlignment="Center" 
+                                    HorizontalTextAlignment="Start" 
+                                    Grid.Column="0" 
+                                    FontAttributes="Bold" 
+                                    FontSize="Small" 
+                                    TextColor="White" 
+                                    Text="{Binding Price, StringFormat='{0} ₽'}"/>
+                                <ImageButton 
+                                    BackgroundColor="Transparent" 
+                                    Margin="5,2,15,2" 
+                                    HorizontalOptions="End" 
+                                    VerticalOptions="Center" 
+                                    Grid.Column="1" 
+                                    Aspect="Center" 
+                                    Source="add_cart.png"/>
                             </Grid>
-                            <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Grid.Column="1" Text="XXX мл"/>
+                            <Label 
+                                TextColor="{StaticResource Tertiary}" 
+                                HorizontalTextAlignment="Center" 
+                                VerticalTextAlignment="Center" 
+                                Grid.Column="1" 
+                                Text="XXX мл"/>
                         </Grid>
                     </VerticalStackLayout>
                 </DataTemplate>

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProductovichokProject.Data.Models;
 using ProductovichokProject.Services;
 using System;
@@ -23,6 +24,12 @@ namespace ProductovichokProject.ViewModels
             _userService = userService;
             _productService = productService;
             Products = _productService.GetProducts().Result;
+        }
+
+        [RelayCommand]
+        async void ScrollForward(ScrollView scrollView)
+        {
+            await scrollView.ScrollToAsync(scrollView.ScrollX + 20,0, true);
         }
     }
 }
