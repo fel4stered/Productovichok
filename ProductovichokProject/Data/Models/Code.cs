@@ -9,7 +9,7 @@ public partial class Code
 
     public int? UserId { get; set; }
 
-    public DateTime? DateAdd { get; set; }
+    public DateTime? TimeAdd { get; set; }
 
     public virtual User User { get; set; }
 }

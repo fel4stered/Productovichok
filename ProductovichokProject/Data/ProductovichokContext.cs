@@ -36,11 +36,13 @@ public partial class ProductovichokContext : DbContext
 
     public virtual DbSet<Street> Streets { get; set; }
 
+    public virtual DbSet<Unit> Units { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseMySql("server=localhost;user=root;password=1234;database=productovichok", ServerVersion.Parse("8.0.25-mysql"));
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=localhost;user=root;password=1234;database=productovichok", ServerVersion.Parse("8.0.33-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -92,10 +94,9 @@ public partial class ProductovichokContext : DbContext
             entity.Property(e => e.CodeId)
                 .ValueGeneratedNever()
                 .HasColumnName("CodeID");
-            entity.Property(e => e.DateAdd)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("datetime")
-                .HasColumnName("date_add");
+            entity.Property(e => e.TimeAdd)
+                .HasColumnType("timestamp")
+                .HasColumnName("time_add");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Codes)
@@ -193,17 +194,24 @@ public partial class ProductovichokContext : DbContext
 
             entity.HasIndex(e => e.CategoryId, "CategoryID");
 
+            entity.HasIndex(e => e.UnitsId, "UnitsID_idx");
+
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.ImageUrl)
-                .HasMaxLength(300)
+                .HasMaxLength(250)
                 .HasColumnName("ImageURL");
             entity.Property(e => e.Price).HasPrecision(10, 2);
             entity.Property(e => e.ProductName).HasMaxLength(100);
+            entity.Property(e => e.UnitsId).HasColumnName("UnitsID");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("products_ibfk_1");
+
+            entity.HasOne(d => d.Units).WithMany(p => p.Products)
+                .HasForeignKey(d => d.UnitsId)
+                .HasConstraintName("UnitsID");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -234,6 +242,16 @@ public partial class ProductovichokContext : DbContext
 
             entity.Property(e => e.StreetId).HasColumnName("StreetID");
             entity.Property(e => e.StreetName).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Unit>(entity =>
+        {
+            entity.HasKey(e => e.UnitsId).HasName("PRIMARY");
+
+            entity.ToTable("units");
+
+            entity.Property(e => e.UnitsId).HasColumnName("UnitsID");
+            entity.Property(e => e.Title).HasMaxLength(45);
         });
 
         modelBuilder.Entity<User>(entity =>

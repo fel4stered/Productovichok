@@ -17,13 +17,13 @@ public partial class Product
 
     public int? Discount { get; set; }
 
-    public bool? WeightOrVolume { get; set; }
-
-    public bool? IsPieceOrWeighted { get; set; }
+    public int? UnitsId { get; set; }
 
     public string ImageUrl { get; set; }
 
     public virtual Category Category { get; set; }
 
     public virtual ICollection<Orderdetail> Orderdetails { get; set; } = new List<Orderdetail>();
+
+    public virtual Unit Units { get; set; }
 }
