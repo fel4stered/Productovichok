@@ -194,7 +194,7 @@ public partial class ProductovichokContext : DbContext
 
             entity.HasIndex(e => e.CategoryId, "CategoryID");
 
-            entity.HasIndex(e => e.UnitsId, "UnitsID_idx");
+            entity.HasIndex(e => e.UnitId, "UnitsID_idx");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
@@ -203,15 +203,15 @@ public partial class ProductovichokContext : DbContext
                 .HasColumnName("ImageURL");
             entity.Property(e => e.Price).HasPrecision(10, 2);
             entity.Property(e => e.ProductName).HasMaxLength(100);
-            entity.Property(e => e.UnitsId).HasColumnName("UnitsID");
+            entity.Property(e => e.UnitId).HasColumnName("UnitID");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("products_ibfk_1");
 
             entity.HasOne(d => d.Units).WithMany(p => p.Products)
-                .HasForeignKey(d => d.UnitsId)
-                .HasConstraintName("UnitsID");
+                .HasForeignKey(d => d.UnitId)
+                .HasConstraintName("UnitID");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -246,11 +246,11 @@ public partial class ProductovichokContext : DbContext
 
         modelBuilder.Entity<Unit>(entity =>
         {
-            entity.HasKey(e => e.UnitsId).HasName("PRIMARY");
+            entity.HasKey(e => e.UnitId).HasName("PRIMARY");
 
             entity.ToTable("units");
 
-            entity.Property(e => e.UnitsId).HasColumnName("UnitsID");
+            entity.Property(e => e.UnitId).HasColumnName("UnitsID");
             entity.Property(e => e.Title).HasMaxLength(45);
         });
 

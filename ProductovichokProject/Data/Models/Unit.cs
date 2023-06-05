@@ -5,7 +5,7 @@ namespace ProductovichokProject.Data.Models;
 
 public partial class Unit
 {
-    public int UnitsId { get; set; }
+    public int UnitId { get; set; }
 
     public string Title { get; set; }
 
