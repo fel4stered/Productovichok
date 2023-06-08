@@ -9,6 +9,13 @@ namespace ProductovichokProject
             InitializeComponent();
 
             MainPage = new AppShell();
+
+            Microsoft.Maui.Handlers.PickerHandler.Mapper.AppendToMapping(nameof(Entry), (handler, view) =>
+            {
+#if ANDROID
+                handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+#endif
+            });
         }
 
         protected override Window CreateWindow(IActivationState activationState)

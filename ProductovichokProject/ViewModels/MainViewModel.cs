@@ -4,6 +4,7 @@ using ProductovichokProject.Services;
 using ProductovichokProject.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using System.Windows.Input;
 
 namespace ProductovichokProject.ViewModels
 {
-    public partial class MainViewModel : ObservableObject
+    public partial class MainViewModel : ObservableObject 
     {
         private readonly UserService _userService;
 
@@ -32,9 +33,6 @@ namespace ProductovichokProject.ViewModels
         [RelayCommand]
         async void SignIn()
         {
-#if ANDROID
-    await Shell.Current.GoToAsync(nameof(ClientMainPage));
-#endif
             if (Nickname is not null)
             {
                 if (int.TryParse(Code, out var CodeInt))

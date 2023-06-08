@@ -5,7 +5,6 @@
              x:Class="ProductovichokProject.MainPage"
              xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
              x:DataType="viewmodel:MainViewModel"
-             MinimumWidthRequest="500"
              >
 
     <ScrollView>
@@ -23,8 +22,8 @@
             </Grid>
             <VerticalStackLayout 
                 Grid.Row="1"
-                HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
                 Spacing="10"
                 WidthRequest="300">
                 <Image
@@ -48,14 +47,19 @@
                        VerticalTextAlignment="Center"/>
                 <Entry Placeholder="Телеграм никнейм"
                        PlaceholderColor="{StaticResource Gray400}"
-                       Text="{Binding Nickname}"/>
+                       Text="{Binding Nickname}"
+                       
+                       MaxLength="20"/>
                 <Entry Placeholder="Код"
                        PlaceholderColor="{StaticResource Gray400}"
                        Keyboard="Numeric"
+                       MaxLength="6"
                        Text="{Binding Code}"/>
                 <Button Text="Авторизироваться"
                         Command="{Binding SignInCommand}"/>
-                <Label Text="{Binding Error}"/>
+                <Label Text="{Binding Error}"
+                       HorizontalTextAlignment="Center"
+                       TextColor="MediumVioletRed"/>
             </VerticalStackLayout>
         </Grid>
     </ScrollView>

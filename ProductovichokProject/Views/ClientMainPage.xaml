@@ -2,43 +2,38 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:model="clr-namespace:ProductovichokProject.Data.Models"
              x:DataType="viewmodel:ClientMainViewModel"
              x:Class="ProductovichokProject.Views.ClientMainPage"
              Title="ClientMainPage">
 
-    <Grid RowSpacing="5" RowDefinitions="0.1*,auto,*" >
-        <Grid Grid.Row="0" ColumnDefinitions="*, *, *">
+    <Grid RowSpacing="5" RowDefinitions="0.08*,auto,*" >
+        <Grid Grid.Row="0" ColumnDefinitions="*, *">
             <BoxView Grid.ColumnSpan="3"
                          Color="{StaticResource Primary}"/>
-            <Label Text="Продуктовичок"
-                       Grid.Column="0"
-                       FontSize="Medium"
-                       TextColor="White"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"
-                       Margin="50,0,0,0"/>
-
             <HorizontalStackLayout
-                Grid.Column="1"
-                HorizontalOptions="Center"
+                Grid.Column="0"
+                Margin="10,0,0,0"
+                Spacing="5"
+                HorizontalOptions="Start"
                 VerticalOptions="Center">
-                
                 <Image
                     Source="location.png"
                     Aspect="Center"/>
-
                 <Picker 
-                    Style="{StaticResource AddressPicker}"
-                    >
-                </Picker>
-                <Picker>
-                    
+                    FontAttributes="Bold"
+                    FontSize="Small"
+                    Style="{StaticResource AddressPicker}">
+                    <Picker.Items>
+                        <x:String>Добавить новый адрес</x:String>
+                    </Picker.Items>
                 </Picker>
             </HorizontalStackLayout>
 
             <ImageButton
-                CornerRadius="50"
+                CornerRadius="20"
+                BackgroundColor="{StaticResource Blue200Accent}"
                 VerticalOptions="Center"
                 Padding="5"
                 Margin="0,0,10,0"
@@ -101,27 +96,23 @@
                     </BindableLayout.ItemTemplate>
                 </HorizontalStackLayout>
             </ScrollView >
-            <Button 
-                    Text=">"
-                    HorizontalOptions="EndAndExpand"
-                    VerticalOptions="Center"
-                    Command="{Binding ScrollForwardCommand}" 
-                    CommandParameter="{Binding Source={x:Reference MenuScroll}, Mode=OneWay}"/>
         </Grid>
 
         <CollectionView 
             ItemSizingStrategy="MeasureFirstItem"
-            ItemsLayout="VerticalGrid,4" 
+            ItemsLayout="VerticalGrid,2" 
             ItemsSource="{Binding Products}" 
             Grid.Row="2">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:Product}">
                     <VerticalStackLayout Spacing="10" Margin="10">
                         <Image 
-                            HeightRequest="250" 
-                            WidthRequest="250" 
+                            HeightRequest="100" 
+                            WidthRequest="100" 
                             Source="{Binding ImageUrl}"/>
                         <Label 
+                            FontSize="Micro"
+                            FontAttributes="Bold"
                             HorizontalTextAlignment="Center" 
                             VerticalTextAlignment="Center" 
                             MaxLines="2" 
@@ -132,30 +123,36 @@
                         <Grid ColumnDefinitions="2*,0.6*" 
                               ColumnSpacing="10" 
                               HorizontalOptions="Center" >
-                            <Grid ColumnDefinitions="2*,1*" 
-                                  ColumnSpacing="10">
-                                <BoxView Grid.ColumnSpan="2"
+                            <Grid ColumnDefinitions="1*,auto,1*"  >
+                                <BoxView Grid.ColumnSpan="3"
                                          CornerRadius="50"
                                          Color="{StaticResource Secondary}"/>
+                                
+                                <Button Text="-"
+                                        BackgroundColor="{StaticResource Secondary}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
+                                        Grid.Column="0"
+                                        CornerRadius="50"/>
                                 <Label
-                                    Margin="15,0,5,0" 
+                                    LineBreakMode="NoWrap"
                                     VerticalTextAlignment="Center" 
-                                    HorizontalTextAlignment="Start" 
-                                    Grid.Column="0" 
+                                    HorizontalTextAlignment="Center" 
+                                    Grid.Column="1" 
                                     FontAttributes="Bold" 
                                     FontSize="Small" 
                                     TextColor="White" 
                                     Text="{Binding Price, StringFormat='{0} ₽'}"/>
-                                <ImageButton 
-                                    BackgroundColor="Transparent" 
-                                    Margin="5,2,15,2" 
-                                    HorizontalOptions="End" 
-                                    VerticalOptions="Center" 
-                                    Grid.Column="1" 
-                                    Aspect="Center" 
-                                    Source="add_cart.png"/>
+                                
+                                <Button Text="+"
+                                        BackgroundColor="{StaticResource Secondary}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
+                                        Grid.Column="2"
+                                        CornerRadius="50"/>
                             </Grid>
                             <Label 
+                                FontSize="Micro"
                                 TextColor="{StaticResource Tertiary}" 
                                 HorizontalTextAlignment="Center" 
                                 VerticalTextAlignment="Center" 

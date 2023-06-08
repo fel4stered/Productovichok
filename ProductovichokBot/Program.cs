@@ -20,7 +20,8 @@ internal class Program
         try
         {
             connection.Open();
-            Console.WriteLine("ебать");
+            Console.WriteLine("Подключение прошло успешно");
+            connection.Close();
         }
         catch (Exception ex)
         {
