@@ -6,23 +6,26 @@ using ProductovichokBot.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
+using MySql.Data.MySqlClient;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         Console.WriteLine("ПродуктовичокBot");
-        #region ConnectDB
-        var connectionString = "server=localhost;user=root;password=1234;database=productovichok";
-        var services = new ServiceCollection();
-        services.AddDbContext<ProductovichokContext>(
-            dbContextOptions => dbContextOptions
-                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-        );
-        #endregion
+
+        string connectionString = "server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok";
+        MySqlConnection connection = new MySqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("ебать");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
         var botClient = new TelegramBotClient("6198240767:AAEc1CO7BTwcMvSd37QT6d9YqYSzW9De85o");
         botClient.StartReceiving(Update, Error);
         Console.ReadLine();
@@ -40,7 +43,7 @@ internal class Program
         var message = update.Message;
         TimeSpan times = DateTime.UtcNow - update.Message.Date;
 
-        if (times.TotalMinutes > 3)
+        if (times.TotalMinutes > 1)
             Console.WriteLine("skipping old update");
         else if (!string.IsNullOrWhiteSpace(message.Text))
         {
@@ -53,6 +56,7 @@ internal class Program
                 }
                 else
                 {
+
                     UserService.Registration((int)message.Chat.Id, message.Chat.Username, message.Chat.FirstName);
                     await botClient.SendTextMessageAsync(message.Chat.Id, "Вы успешно зарегистрировались. Введите команду '/code', чтобы получить проверочный код для авторизации.");
                     return;
@@ -85,5 +89,18 @@ internal class Program
     async static Task Error(ITelegramBotClient botClient, Exception arg2, CancellationToken arg3)
     {
 
+    }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        var connectionString = "server=192.168.0.123;user=kek;password=1234;database=productovichok";
+        var serverVersion = new MySqlServerVersion(new Version(10, 4, 28));
+        services.AddDbContext<ProductovichokContext>(
+            dbContextOptions => dbContextOptions
+                .UseMySql(connectionString, serverVersion)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
+        );
     }
 }

@@ -13,9 +13,6 @@ namespace ProductovichokProject
     {
         public static MauiApp CreateMauiApp()
         {
-
-           
-            
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -29,7 +26,7 @@ namespace ProductovichokProject
 
             #region Services
             #region ConnectDB
-            var connectionString = "server=localhost;user=root;password=1234;database=productovichok";
+            var connectionString = "server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok; ";
             builder.Services.AddDbContext<ProductovichokContext>(
                 dbContextOptions => dbContextOptions
                     .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
