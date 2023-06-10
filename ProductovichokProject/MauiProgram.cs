@@ -46,6 +46,7 @@ namespace ProductovichokProject
             builder.Services.AddSingleton<UserService>();
             builder.Services.AddSingleton<ProductService>();
             builder.Services.AddSingleton<CategoryService>();
+            builder.Services.AddSingleton<PageService>();
             #endregion
 
 #if DEBUG

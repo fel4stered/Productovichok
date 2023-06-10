@@ -20,14 +20,7 @@ namespace ProductovichokProject.Services
         
         public async Task<List<Category>> GetCategories()
         {
-            //var categories = _context.Categories.ToList();
-            //List<string> categoriesString = new List<string>();
-            //foreach(var category in categories)
-            //{
-            //    categoriesString.Add(category.CategoryName);
-            //}
-            //return categoriesString;
-            return  _context.Categories.ToList();
+            return  await _context.Categories.ToListAsync();
         }
     }
 }

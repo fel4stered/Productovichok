@@ -56,7 +56,20 @@
                        MaxLength="6"
                        Text="{Binding Code}"/>
                 <Button Text="Авторизироваться"
-                        Command="{Binding SignInCommand}"/>
+                        Command="{Binding SignInCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Button" 
+                                             Binding="{Binding Loading}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <ActivityIndicator IsRunning="{Binding Loading}" />
                 <Label Text="{Binding Error}"
                        HorizontalTextAlignment="Center"
                        TextColor="MediumVioletRed"/>

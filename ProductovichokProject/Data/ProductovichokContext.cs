@@ -40,6 +40,9 @@ public partial class ProductovichokContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok", ServerVersion.Parse("8.0.25-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -92,6 +95,7 @@ public partial class ProductovichokContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("CodeID");
             entity.Property(e => e.TimeAdd)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp")
                 .HasColumnName("time_add");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -176,10 +180,12 @@ public partial class ProductovichokContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Orderdetails)
                 .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("orderdetails_ibfk_1");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Orderdetails)
                 .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("orderdetails_ibfk_2");
         });
 
@@ -191,24 +197,25 @@ public partial class ProductovichokContext : DbContext
 
             entity.HasIndex(e => e.CategoryId, "CategoryID");
 
-            entity.HasIndex(e => e.UnitId, "UnitsID_idx");
+            entity.HasIndex(e => e.UnitId, "UnitID");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(250)
                 .HasColumnName("ImageURL");
-            entity.Property(e => e.Price).HasPrecision(10, 2);
             entity.Property(e => e.ProductName).HasMaxLength(100);
             entity.Property(e => e.UnitId).HasColumnName("UnitID");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("products_ibfk_1");
 
-            entity.HasOne(d => d.Units).WithMany(p => p.Products)
+            entity.HasOne(d => d.Unit).WithMany(p => p.Products)
                 .HasForeignKey(d => d.UnitId)
-                .HasConstraintName("UnitID");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("products_ibfk_2");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -247,8 +254,8 @@ public partial class ProductovichokContext : DbContext
 
             entity.ToTable("units");
 
-            entity.Property(e => e.UnitId).HasColumnName("UnitsID");
-            entity.Property(e => e.Title).HasMaxLength(45);
+            entity.Property(e => e.UnitId).HasColumnName("UnitID");
+            entity.Property(e => e.Title).HasMaxLength(5);
         });
 
         modelBuilder.Entity<User>(entity =>

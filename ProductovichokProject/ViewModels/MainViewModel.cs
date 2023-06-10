@@ -15,10 +15,12 @@ namespace ProductovichokProject.ViewModels
     public partial class MainViewModel : ObservableObject 
     {
         private readonly UserService _userService;
+        private readonly PageService _pageService;
 
-        public MainViewModel(UserService userService)
+        public MainViewModel(UserService userService, PageService pageService)
         {
             _userService = userService;
+            _pageService = pageService;
         }
 
         public ICommand LinkCommand => new Command<string>(async (url) => await Launcher.OpenAsync(url));
@@ -29,6 +31,8 @@ namespace ProductovichokProject.ViewModels
         string code;
         [ObservableProperty]
         string error = "";
+        [ObservableProperty]
+        bool loading = false;
 
         [RelayCommand]
         async void SignIn()
@@ -37,14 +41,18 @@ namespace ProductovichokProject.ViewModels
             {
                 if (int.TryParse(Code, out var CodeInt))
                 {
+                    Loading = true;
+                    
                     if (await _userService.Authorization(Nickname, CodeInt))
                     {
-                        await Shell.Current.GoToAsync(nameof(ClientMainPage));
+                        await _pageService.GoToPageAsync(nameof(ClientMainPage));
                     }
                     else
                     {
+                        Task.Delay(200).Wait();
                         Error = "Ошибка авторизации! Проверьте правильность написания логина и кода.";
                     }
+                    Loading = false;
                 }
             }
         }

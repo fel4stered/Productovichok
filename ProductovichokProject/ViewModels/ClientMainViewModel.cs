@@ -23,19 +23,30 @@ namespace ProductovichokProject.ViewModels
         [ObservableProperty]
         ObservableCollection<Category> categories;
 
+        [ObservableProperty]
+        Category? selectedCategory;
+
         public ClientMainViewModel(UserService userService, ProductService productService, CategoryService categoryService)
         {
             _userService = userService;
             _productService = productService;
             _categoryService = categoryService;
-            Products = _productService.GetProducts().Result;
-            Categories = new ObservableCollection<Category>(_categoryService.GetCategories().Result);
+            Task.Factory.StartNew(() =>
+            {
+                Products = _productService.GetProducts().Result;
+                Categories = new ObservableCollection<Category>(_categoryService.GetCategories().Result);
+            });
         }
 
-        [RelayCommand]
-        async void ScrollForward(ScrollView scrollView)
+        partial void OnSelectedCategoryChanged(Category? value)
         {
-            await scrollView.ScrollToAsync(scrollView.ScrollX + 20, 0, true);
+            Task.Factory.StartNew(() =>
+            {
+                if(value is not null)
+                {
+                    Products = new ObservableCollection<Product>(_productService.GetProducts().Result.Where(x => x.CategoryId == value.CategoryId));
+                }
+            });
         }
     }
 }
