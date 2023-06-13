@@ -51,6 +51,7 @@
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
 	  <None Remove="Resources\Images\add_cart.svg" />
 	  <None Remove="Resources\Images\location.svg" />
+	  <None Remove="Resources\Images\shopping_cart.svg" />
 	  <None Remove="Resources\Images\telegram_app.svg" />
 	  <None Remove="Resources\Images\user.svg" />
 	  <None Remove="Resources\Raw\root.crt" />

@@ -29,3 +29,6 @@ public partial class Product
 
     public virtual Unit Unit { get; set; } = null!;
 }
+
+
+

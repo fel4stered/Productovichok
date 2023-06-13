@@ -14,6 +14,8 @@ namespace ProductovichokProject.Services
     {
         private readonly ProductovichokContext _context;
 
+        public ObservableCollection<Cart> Cart;
+
         public ProductService(ProductovichokContext productovichokContext)
         {
             _context = productovichokContext;
@@ -26,5 +28,6 @@ namespace ProductovichokProject.Services
             ObservableCollection<Product> products = new ObservableCollection<Product>(await _context.Products.ToListAsync()); 
             return products;
         }
+
     }
 }
