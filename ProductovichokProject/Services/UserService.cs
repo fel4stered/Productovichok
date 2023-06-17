@@ -25,11 +25,35 @@ namespace ProductovichokProject.Services
             var Code = await _context.Codes.SingleOrDefaultAsync(x => x.CodeId == code && x.User.TelegramUserNickname == nickname);
             if (Code is not null)
             {
+                await _context.Users.ToListAsync();
                 UserInfo = Code.User;
                 return true;
             }
             else
                 return false;
+        }
+
+        public async Task<bool> UserAddressesChecker()
+        {
+            if (await _context.UserAddresses.AnyAsync(x => x.UserId == UserInfo.UserId))
+                return true;
+            else
+                return false;
+        }
+
+        public async Task<List<UserAddress>> GetUserAddresses()
+        {
+            await _context.Addresses.ToListAsync();
+            await _context.Streets.ToListAsync();
+            await _context.Houses.ToListAsync();
+            var  UserAddresses = await _context.UserAddresses.Where(x => x.UserId == UserInfo.UserId).ToListAsync();
+            return UserAddresses;
+        }
+
+        public async Task AddUserAddress(UserAddress userAddress)
+        {
+            await _context.UserAddresses.AddAsync(userAddress);
+            await _context.SaveChangesAsync();
         }
     }
 }

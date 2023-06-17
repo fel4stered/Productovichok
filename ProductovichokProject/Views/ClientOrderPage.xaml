@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             x:DataType="viewmodel:ClientOrderViewModel"
+             xmlns:model="clr-namespace:ProductovichokProject.Data.Models"
+             x:Class="ProductovichokProject.Views.ClientOrderPage"
+             Title="ClientOrderPage">
+    <Grid RowSpacing="5" RowDefinitions="0.1*,auto,*,auto" >
+        <Grid Grid.Row="0" ColumnDefinitions="*, *">
+            <BoxView Grid.ColumnSpan="3"
+                         Color="{StaticResource Primary}"/>
+            <HorizontalStackLayout
+                Grid.Column="0"
+                Margin="10,0,0,0"
+                Spacing="5"
+                HorizontalOptions="Start"
+                VerticalOptions="Center">
+                <Label Text="Продуктовичок"
+                       Grid.Column="0"
+                       FontSize="Medium"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"
+                       Margin="20,0,0,0"/>
+            </HorizontalStackLayout>
+
+            <ImageButton
+                CornerRadius="20"
+                BackgroundColor="{StaticResource Blue200Accent}"
+                VerticalOptions="Center"
+                Padding="5"
+                Margin="0,0,10,0"
+                HorizontalOptions="EndAndExpand"
+                Aspect="Center"
+                Grid.Column="2"
+                Source="user.png"/>
+        </Grid>
+        <VerticalStackLayout
+            Grid.Row="1">
+            <Label Text="Адрес доставки:"
+                   FontSize="Large"
+                   FontAttributes="Bold"
+                   Padding="16"/>
+            <Label Text="ул. Правды, д. 21, кв. 56, этаж 8, п. 2"
+                   Padding="16,0"/>
+        </VerticalStackLayout>
+        <CollectionView 
+            ItemSizingStrategy="MeasureFirstItem"
+            ItemsLayout="VerticalGrid,1"
+            Margin="0,30,0,0"
+            HorizontalOptions="Center"
+            ItemsSource="{Binding Cart}"
+            Grid.Row="2">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type model:Cart}">
+                    <Grid Margin="0,10" ColumnDefinitions="{OnPlatform WinUI='150,*,auto', Android='100,*,auto'}">
+                        <Image 
+                            Grid.Column="0"
+                            HeightRequest="{OnPlatform Android='100', WinUI='150'}" 
+                            WidthRequest="{OnPlatform Android='100', WinUI='150'}"
+                            Source="{Binding Product.ImageUrl}"/>
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="10"
+                            VerticalOptions="Center">
+                            <VerticalStackLayout>
+                                <Label 
+                                    LineBreakMode="WordWrap"
+                                    MaxLines="2"
+                                    HorizontalOptions="Start"
+                                    MaximumWidthRequest="{OnPlatform WinUI='550'}"
+                                    FontSize="{OnPlatform WinUI='Small'}"
+                                    TextColor="{StaticResource Primary}" 
+                                    Text="{Binding Product.ProductName}"/>
+                                <Label 
+                                    FontSize="{OnPlatform Android='Micro', WinUI='Body'}"
+                                    TextColor="{StaticResource Tertiary}" 
+                                    Grid.Column="1" 
+                                    LineBreakMode="WordWrap"
+                                    MaxLines="2">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="Product.VolumeOrWeight"/>
+                                            <Binding Path="Product.Unit.Title"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Grid Grid.Column="0" ColumnDefinitions="{OnPlatform Android='auto,auto,auto', WinUI='auto,100,auto'}">
+                                <BoxView Grid.ColumnSpan="3"
+                                         CornerRadius="50"
+                                         Color="{StaticResource Secondary}"/>
+
+                                <Button Text="-"
+                                        FontSize="Medium"
+                                        BackgroundColor="{StaticResource Secondary}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
+                                        Grid.Column="0"
+                                        BorderWidth="0"
+                                        CornerRadius="50"/>
+
+                                <Label Grid.Column="1"
+                                       Text="{Binding Count}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       FontSize="Small"
+                                       TextColor="White"
+                                       FontAttributes="Bold"/>
+
+                                <Button Text="+"
+                                        FontSize="Small"
+                                        BackgroundColor="{StaticResource Secondary}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
+                                        Grid.Column="2"
+                                        BorderWidth="0"
+                                        CornerRadius="50"/>
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout
+                            HorizontalOptions="End"
+                            Margin="{OnPlatform WinUI='15,0', Android='10,0'}"
+                            Spacing="5"
+                            Grid.Column="2">
+                            <Label 
+                                LineBreakMode="NoWrap"
+                                VerticalTextAlignment="Center" 
+                                HorizontalTextAlignment="Center"
+                                FontAttributes="Bold"
+                                Padding="0"
+                                TextDecorations="Strikethrough"
+                                FontSize="Small" 
+                                TextColor="LightSlateGray"
+                                Text="{Binding Product.Price, StringFormat='{0} ₽'}">
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Setter Property="IsVisible" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding SumPrice}" Value="0">
+                                                <Setter Property="IsVisible" Value="Hidden"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+                            <Label
+                                LineBreakMode="NoWrap"
+                                VerticalTextAlignment="Center" 
+                                HorizontalTextAlignment="Center"
+                                FontAttributes="Bold"
+                                Padding="0"
+                                FontSize="Small" 
+                                TextColor="Black"
+                                Text="{Binding SumDiscountPrice, StringFormat='{0} ₽'}">
+                            </Label>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button
+            FontSize="Medium"
+            Margin="0,20"
+            Padding="100,0"
+            HorizontalOptions="Center"
+            Text="Заказать"
+            Grid.Row="3"/>
+    </Grid>
+</ContentPage>

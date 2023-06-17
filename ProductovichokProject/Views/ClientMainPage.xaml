@@ -22,13 +22,12 @@
                     Source="location.png"
                     Aspect="Center"/>
                 <Picker 
+                    x:Name="AddressPick"
+                    ItemsSource="{Binding UserAddressesShort}"
                     FontAttributes="Bold"
                     FontSize="Small"
-                    Style="{StaticResource AddressPicker}">
-                    <Picker.Items>
-                        <x:String>Добавить новый адрес</x:String>
-                    </Picker.Items>
-                </Picker>
+                    Style="{StaticResource AddressPicker}"
+                    SelectedIndex="{Binding AddressPickerSelectedIndex}"/>
             </HorizontalStackLayout>
 
             <ImageButton
@@ -98,33 +97,60 @@
                 </HorizontalStackLayout>
             </ScrollView >
         </Grid>
-
+        
         <CollectionView 
             ItemSizingStrategy="MeasureFirstItem"
-            ItemsLayout="{OnPlatform Android='VerticalGrid,2', WinUI='VerticalGrid,4'}" 
+            ItemsLayout="{OnPlatform Android='VerticalGrid,2', WinUI='VerticalGrid,5'}" 
             ItemsSource="{Binding Products}" 
             Grid.Row="2">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:Product}">
                     <VerticalStackLayout Spacing="10" Margin="10">
-                        <Image 
+                        <Grid>
+                            <Image 
                             HeightRequest="{OnPlatform Android='100', WinUI='250'}" 
                             WidthRequest="{OnPlatform Android='100', WinUI='250'}"
                             Source="{Binding ImageUrl}"/>
+                            <Border 
+                                StrokeThickness="0"
+                                BackgroundColor="MediumVioletRed"
+                                HorizontalOptions="End" 
+                                VerticalOptions="Start"  
+                                Padding="{OnPlatform Android='10', WinUI='5'}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Label
+                                    Text="{Binding Discount, StringFormat='-{0}%'}"
+                                    FontSize="Caption"
+                                    TextColor="White"/>
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="IsVisible" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding Discount}" Value="0">
+                                                <Setter Property="IsVisible" Value="Hidden"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                        </Grid>
                         <Label 
-                            FontSize="Caption"
+                            FontSize="{OnPlatform Android='Caption', WinUI='Micro'}"
                             FontAttributes="Bold"
                             HorizontalTextAlignment="Center" 
                             VerticalTextAlignment="Center" 
-                            MaxLines="2" 
+                            MaxLines="2"
                             MaximumWidthRequest="{OnPlatform WinUI='300'}"
-                            LineBreakMode="WordWrap" 
+                            LineBreakMode="TailTruncation"
                             HorizontalOptions="Center"  
                             TextColor="{StaticResource Tertiary}" 
                             Text="{Binding ProductName}"/>
                         <Grid ColumnDefinitions="auto,25" 
-                              HorizontalOptions="Center" >
-                            <Grid ColumnDefinitions="auto,auto,auto">
+                              HorizontalOptions="Center"
+                              ColumnSpacing="{OnPlatform WinUI='10'}">
+                            <Grid Grid.Column="0" ColumnDefinitions="{OnPlatform Android='auto,auto,auto', WinUI='auto,100,auto'}">
                                 <BoxView Grid.ColumnSpan="3"
                                          CornerRadius="50"
                                          Color="{StaticResource Secondary}"/>
@@ -139,16 +165,41 @@
                                         CornerRadius="50"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ClientMainViewModel}}, Path=RemoveProductFromCartCommand}"
                                         CommandParameter="{Binding .}"/>
-                                <Label
-                                    LineBreakMode="NoWrap"
-                                    VerticalTextAlignment="Center" 
-                                    HorizontalTextAlignment="Center"
-                                    Grid.Column="1" 
-                                    FontAttributes="Bold"
-                                    Padding="0"
-                                    FontSize="{OnPlatform Android='Small', WinUI='Small'}" 
-                                    TextColor="White"
-                                    Text="{Binding Price, StringFormat='{0} ₽'}"/>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Label 
+                                        LineBreakMode="NoWrap"
+                                        VerticalTextAlignment="Center" 
+                                        HorizontalTextAlignment="Center"
+                                        FontAttributes="Bold"
+                                        Padding="0"
+                                        TextDecorations="Strikethrough"
+                                        FontSize="{OnPlatform Android='Micro', WinUI='Micro'}" 
+                                        TextColor="LightSlateGray"
+                                        Text="{Binding Price, StringFormat='{0} ₽'}"
+                                        Grid.Row="0">
+                                        <Label.Style>
+                                            <Style TargetType="Label">
+                                                <Setter Property="IsVisible" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Discount}" Value="0">
+                                                        <Setter Property="IsVisible" Value="Hidden"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
+                                    <Label
+                                        LineBreakMode="NoWrap"
+                                        VerticalTextAlignment="Center" 
+                                        HorizontalTextAlignment="Center"
+                                        Grid.Row="1" 
+                                        FontAttributes="Bold"
+                                        Padding="0"
+                                        FontSize="{OnPlatform Android='Small', WinUI='Small'}" 
+                                        TextColor="White"
+                                        Text="{Binding DiscontPrice, StringFormat='{0} ₽'}">
+                                    </Label>
+                                </VerticalStackLayout>
 
                                 <Button Text="+"
                                         FontSize="Small"
@@ -163,7 +214,7 @@
                             </Grid>
                             
                             <Label 
-                                FontSize="Micro"
+                                FontSize="{OnPlatform Android='Micro', WinUI='Body'}"
                                 TextColor="{StaticResource Tertiary}" 
                                 HorizontalTextAlignment="Center" 
                                 VerticalTextAlignment="Center" 
@@ -189,22 +240,34 @@
               VerticalOptions="End"
               Margin="0,0,10,50"
               ColumnDefinitions="65,auto">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToOrderPageCommand}"/>
+            </Grid.GestureRecognizers>
             <BoxView Grid.ColumnSpan="2"
-                    CornerRadius="50"
-                    Color="{StaticResource Primary}"/>
+                        CornerRadius="50"
+                        Color="{StaticResource Primary}"/>
             <Image Grid.Column="0"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"
-                   Source="shopping_cart.png"
-                   Aspect="Center"/>
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       Source="shopping_cart.png"
+                       Aspect="Center"/>
             <Label Grid.Column="1"
-                   TextColor="{StaticResource White}"
-                   FontAttributes="Bold"
-                   FontSize="Medium"
-                   Margin="0,0,15,0"
-                   Text="{Binding CartPrice, StringFormat='{0} ₽'}"
-                   VerticalOptions="Center"/>
-
+                       TextColor="{StaticResource White}"
+                       FontAttributes="Bold"
+                       FontSize="Medium"
+                       Margin="0,0,15,0"
+                       Text="{Binding CartPrice, StringFormat='{0} ₽'}"
+                       VerticalOptions="Center"/>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="IsVisible" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger TargetType="Grid" Binding="{Binding Cart.Count}" Value="0">
+                            <Setter Property="IsVisible" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
         </Grid>
     </Grid>
 </ContentPage>

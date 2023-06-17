@@ -40,6 +40,8 @@ public partial class ProductovichokContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserAddress> UserAddresses { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseMySql("server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok", ServerVersion.Parse("8.0.25-mysql"));
@@ -204,7 +206,6 @@ public partial class ProductovichokContext : DbContext
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(250)
                 .HasColumnName("ImageURL");
-            entity.Property(e => e.Price).HasPrecision(10, 2);
             entity.Property(e => e.ProductName).HasMaxLength(100);
             entity.Property(e => e.UnitId).HasColumnName("UnitID");
 
@@ -277,6 +278,30 @@ public partial class ProductovichokContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("users_ibfk_1");
+        });
+
+        modelBuilder.Entity<UserAddress>(entity =>
+        {
+            entity.HasKey(e => new { e.AddressId, e.UserId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+            entity.ToTable("UserAddress");
+
+            entity.HasIndex(e => e.UserId, "UserID_idx");
+
+            entity.Property(e => e.AddressId).HasColumnName("AddressID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Address).WithMany(p => p.UserAddresses)
+                .HasForeignKey(d => d.AddressId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("AddressID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserAddresses)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("UserID");
         });
 
         OnModelCreatingPartial(modelBuilder);

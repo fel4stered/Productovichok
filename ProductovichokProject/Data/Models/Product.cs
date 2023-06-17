@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductovichokProject.Data.Models;
 
@@ -28,7 +29,16 @@ public partial class Product
     public virtual ICollection<Orderdetail> Orderdetails { get; set; } = new List<Orderdetail>();
 
     public virtual Unit Unit { get; set; } = null!;
+
+    [NotMapped]
+    public int? DiscontPrice
+    {
+        get
+        {
+            if(this.Discount != null)
+                return this.Price - (this.Price * this.Discount / 100);
+            else 
+                return this.Price;
+        }
+    }
 }
-
-
-

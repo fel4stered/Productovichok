@@ -16,4 +16,6 @@ public partial class Address
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual Street Street { get; set; }
+
+    public virtual ICollection<UserAddress> UserAddresses { get; set; } = new List<UserAddress>();
 }

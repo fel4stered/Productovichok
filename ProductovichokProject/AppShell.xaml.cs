@@ -1,4 +1,5 @@
 ﻿using ProductovichokProject.Views;
+using ProductovichokProject.Views.Popups;
 
 namespace ProductovichokProject
 {
@@ -9,6 +10,7 @@ namespace ProductovichokProject
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(ClientMainPage), typeof(ClientMainPage));
+            Routing.RegisterRoute(nameof(ClientOrderPage), typeof(ClientOrderPage));
         }
     }
 }
