@@ -7,6 +7,11 @@
              x:DataType="viewmodel:ClientMainViewModel"
              x:Class="ProductovichokProject.Views.ClientMainPage"
              Title="ClientMainPage">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding AppearingCommand}" />
+    </ContentPage.Behaviors>
 
     <Grid RowSpacing="5" RowDefinitions="0.08*,auto,*" >
         <Grid Grid.Row="0" ColumnDefinitions="*, *">
@@ -31,6 +36,7 @@
             </HorizontalStackLayout>
 
             <ImageButton
+                Command="{Binding GoToProfilePageCommand}"
                 CornerRadius="20"
                 BackgroundColor="{StaticResource Blue200Accent}"
                 VerticalOptions="Center"

@@ -28,6 +28,24 @@ namespace ProductovichokProject.Services
             ObservableCollection<Product> products = new ObservableCollection<Product>(await _context.Products.ToListAsync()); 
             return products;
         }
-
+        public async Task AddClientOrder(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            List<Orderdetail> orderdetails = new List<Orderdetail>();
+            foreach (Cart cartitem in Cart)
+            {
+                Orderdetail detail = new Orderdetail()
+                {
+                    OrderId = _context.Orders.Max(x => x.OrderId),
+                    ProductId = cartitem.Product.ProductId,
+                    Quantity = cartitem.Count,
+                    PriceAtOrder = (int)cartitem.Product.DiscontPrice
+                };
+                orderdetails.Add(detail);
+            }
+            _context.Orderdetails.AddRange(orderdetails);
+            await _context.SaveChangesAsync();
+        }
     }
 }

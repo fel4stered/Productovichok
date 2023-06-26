@@ -15,6 +15,8 @@ namespace ProductovichokProject.Services
 
         public User UserInfo { get; set; }
 
+        public UserAddress SelectedUserAddress { get; set; }
+
         public UserService(ProductovichokContext context)
         {
             _context = context;

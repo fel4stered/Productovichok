@@ -37,20 +37,32 @@
                 Source="user.png"/>
         </Grid>
         <VerticalStackLayout
+            MaximumWidthRequest="200"
+            HorizontalOptions="Start"
+            VerticalOptions="Center"
             Grid.Row="1">
             <Label Text="Адрес доставки:"
-                   FontSize="Large"
+                   FontSize="Medium"
                    FontAttributes="Bold"
+                   LineBreakMode="WordWrap"
                    Padding="16"/>
-            <Label Text="ул. Правды, д. 21, кв. 56, этаж 8, п. 2"
+            <Label Text="{Binding SelectUserAddress}"
                    Padding="16,0"/>
         </VerticalStackLayout>
+        <Label
+            Margin="0,0,20,0"
+            FontSize="Medium"
+            FontAttributes="Bold"
+            Grid.Row="1"
+            VerticalOptions="Center"
+            HorizontalOptions="End"
+            Text="{Binding CartPrice, StringFormat='Итого: {0} ₽'}"/>
         <CollectionView 
             ItemSizingStrategy="MeasureFirstItem"
             ItemsLayout="VerticalGrid,1"
             Margin="0,30,0,0"
             HorizontalOptions="Center"
-            ItemsSource="{Binding Cart}"
+            ItemsSource="{Binding AllCart}"
             Grid.Row="2">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:Cart}">
@@ -100,7 +112,9 @@
                                         HorizontalOptions="Center"
                                         Grid.Column="0"
                                         BorderWidth="0"
-                                        CornerRadius="50"/>
+                                        CornerRadius="50"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ClientOrderViewModel}}, Path=RemoveProductFromCartCommand}"
+                                        CommandParameter="{Binding .}"/>
 
                                 <Label Grid.Column="1"
                                        Text="{Binding Count}"
@@ -117,7 +131,9 @@
                                         HorizontalOptions="Center"
                                         Grid.Column="2"
                                         BorderWidth="0"
-                                        CornerRadius="50"/>
+                                        CornerRadius="50"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ClientOrderViewModel}}, Path=AddProductToCartCommand}"
+                                        CommandParameter="{Binding .}"/>
                             </Grid>
                         </VerticalStackLayout>
 
@@ -163,6 +179,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
         <Button
+            Command="{Binding CreateOrderCommand}"
             FontSize="Medium"
             Margin="0,20"
             Padding="100,0"

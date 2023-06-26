@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,24 +7,21 @@ using System.Threading.Tasks;
 
 namespace ProductovichokProject.Data.Models
 {
-    public class Cart
+    public partial class Cart : ObservableObject
     {
         public Product Product { get; set; }
-        public int Count { get; set; }
-        public int? SumPrice
+        [ObservableProperty]
+        public int count;
+
+        partial void OnCountChanging(int value)
         {
-            get 
-            { 
-                return Product.Price * Count;
-            }
+            SumPrice = value * Product.Price;
+            SumDiscountPrice = value * Product.DiscontPrice;
         }
-        public int? SumDiscountPrice
-        {
-            get
-            {
-                return Product.DiscontPrice * Count;
-            }
-        }
+        [ObservableProperty]
+        int? sumPrice;
+        [ObservableProperty]
+        int? sumDiscountPrice;
 
         public Cart(Product product, int count)
         {

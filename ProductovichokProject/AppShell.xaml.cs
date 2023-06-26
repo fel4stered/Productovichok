@@ -11,6 +11,7 @@ namespace ProductovichokProject
 
             Routing.RegisterRoute(nameof(ClientMainPage), typeof(ClientMainPage));
             Routing.RegisterRoute(nameof(ClientOrderPage), typeof(ClientOrderPage));
+            Routing.RegisterRoute(nameof(ProfilePage), typeof(ProfilePage));
         }
     }
 }

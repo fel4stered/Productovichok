@@ -46,6 +46,7 @@ namespace ProductovichokProject.ViewModels
         User userInfo;
 
         List<Product> AllProducts;
+        List<UserAddress> UserAddresses;
         
         public ClientMainViewModel(UserService userService, ProductService productService, CategoryService categoryService, PageService pageService)
         {
@@ -64,10 +65,6 @@ namespace ProductovichokProject.ViewModels
                     UpdateUserAddresses();
                 }
             });
-            if (_productService.Cart is not null)
-            {
-                Cart = _productService.Cart;
-            }
         }
 
         async partial void OnSelectedCategoryChanging(Category? value)
@@ -83,7 +80,7 @@ namespace ProductovichokProject.ViewModels
 
         public void UpdateUserAddresses()
         {
-            var UserAddresses = _userService.GetUserAddresses().Result;
+            UserAddresses = _userService.GetUserAddresses().Result;
             UserAddressesShort = new ObservableCollection<string>(UserAddresses.Select(x => x.Address.Street.StreetName + ", " + x.Address.HouseId)) { "Добавить новый адрес" };
         }
 
@@ -91,7 +88,7 @@ namespace ProductovichokProject.ViewModels
         {
             if (value != -1 && UserAddressesShort[value] == "Добавить новый адрес")
             {
-                var result = await Shell.Current.CurrentPage.ShowPopupAsync(new AddressPopup(_userService.UserInfo));
+                var result = await Shell.Current.CurrentPage.ShowPopupAsync(new AddressPopup(_userService.UserInfo, UserAddresses));
                 if (result != null)
                 {
                     await _userService.AddUserAddress((UserAddress)result);
@@ -103,7 +100,7 @@ namespace ProductovichokProject.ViewModels
         }
 
         [RelayCommand]
-        async Task AddProductToCartAsync(Product selectedProduct)
+        async Task AddProductToCart(Product selectedProduct)
         {
             if(Cart.Any(x => x.Product == selectedProduct)) // проверка на содержание в корзине
             {
@@ -154,8 +151,30 @@ namespace ProductovichokProject.ViewModels
 
         [RelayCommand]
         async void GoToOrderPage()
+        {   
+            if(AddressPickerSelectedIndex != -1)
+            {
+                _userService.SelectedUserAddress = UserAddresses[AddressPickerSelectedIndex];
+                await _pageService.GoToPageAsync(nameof(ClientOrderPage));
+            }
+            else
+                await Application.Current.MainPage.DisplayAlert("", "Выберите адрес доставки!", "Окей");
+        }
+
+        [RelayCommand]
+        void OnAppearing()
         {
-            await _pageService.GoToPageAsync(nameof(ClientOrderPage));
+            if (_productService.Cart is not null)
+            {
+                Cart = _productService.Cart;
+                CartUpdate();
+            }
+        }
+
+        [RelayCommand]
+        async void GoToProfilePage()
+        {
+            await _pageService.GoToPageAsync(nameof(ProfilePage));
         }
     }
 }
