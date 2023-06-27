@@ -12,6 +12,7 @@ namespace ProductovichokProject.Services
     public class OrderService
     {
         private readonly ProductovichokContext _context;
+        public Order SelectedOrder { get; set; }
 
         public OrderService(ProductovichokContext context)
         {
@@ -23,6 +24,13 @@ namespace ProductovichokProject.Services
             await _context.Statuses.ToListAsync();  
             List<Order> orders = await _context.Orders.Where(x => x.ClientId == userId).ToListAsync();
             return orders;
+        }
+
+        public async Task<List<Orderdetail>> GetOrderDetails(int orderId)
+        {
+            await _context.Products.ToListAsync();
+            List<Orderdetail> orderdetails = await _context.Orderdetails.Where(x => x.OrderId == orderId).ToListAsync();
+            return orderdetails;
         }
     }
 }

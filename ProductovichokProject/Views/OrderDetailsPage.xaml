@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             xmlns:model="clr-namespace:ProductovichokProject.Data.Models"
+             x:DataType="viewmodel:OrderDetailsViewModel"
+             x:Class="ProductovichokProject.Views.OrderDetailsPage"
+             Title="OrderDetailsPage">
+
+    <Grid RowDefinitions="0.08*,*">
+        <Grid Grid.Row="0">
+            <BoxView Grid.ColumnSpan="3"
+                         Color="{StaticResource Primary}"/>
+            <Label Text="Продуктовичок"
+                    Grid.Column="0"
+                    FontSize="Medium"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    Margin="50,0,0,0"/>
+        </Grid>
+        <VerticalStackLayout
+            Margin="0,16"
+            Grid.Row="1">
+            <Grid ColumnDefinitions="*,*"
+                  Padding="16,0">
+                <Label
+                    Grid.Column="0"
+                    Text="{Binding SelectedOrder.OrderId, StringFormat='#0000{0}'}"
+                    FontAttributes="Bold"
+                    TextColor="{StaticResource Primary}"
+                    FontSize="Title"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
+                <Label
+                    Grid.Column="1"
+                    FontSize="Body"
+                    FontAttributes="Bold"
+                    Text="{Binding SelectedOrder.Status.StatusName}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="1">
+                                    <Setter Property="TextColor" Value="#FF9800"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="2">
+                                    <Setter Property="TextColor" Value="#FFC107"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="3">
+                                    <Setter Property="TextColor" Value="#4CAF50"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="4">
+                                    <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="5">
+                                    <Setter Property="TextColor" Value="MediumVioletRed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+            </Grid>
+            <Label Text="Адрес доставки:"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   LineBreakMode="WordWrap"
+                   Padding="16,16,16,8"/>
+            <Label Text="{Binding SelectUserAddress}"
+                   Padding="16,0"/>
+            <Grid ColumnDefinitions="*,*"
+                  Padding="16,16">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="Время заказа:"/>
+                    <Label Text="{Binding SelectedOrder.OrderDateTime}"
+                           Margin="0,0,0,5"/>
+                    <Label Text="Время доставки:"/>
+                    <Label>
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Setter Property="Text" Value="-"/>
+                                <Style.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="4">
+                                        <Setter Property="Text" Value="{Binding SelectedOrder.OrderDateTime}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                </VerticalStackLayout>
+                <Label 
+                    FontAttributes="Bold"
+                    FontSize="Body"
+                    Text="{Binding SelectedOrder.TotalPrice, StringFormat='Сумма: {0} ₽'}"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
+            </Grid>
+            <CollectionView 
+                ItemSizingStrategy="MeasureFirstItem"
+                ItemsLayout="VerticalGrid,1"
+                Margin="0,30,0,0"
+                HorizontalOptions="Center"
+                ItemsSource="{Binding OrderDetails}"
+                Grid.Row="2">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type model:Orderdetail}">
+                        <Grid Margin="0,10" ColumnDefinitions="{OnPlatform WinUI='150,*,auto', Android='100,*,auto'}">
+                            <Image 
+                            Grid.Column="0"
+                            HeightRequest="{OnPlatform Android='100', WinUI='150'}" 
+                            WidthRequest="{OnPlatform Android='100', WinUI='150'}"
+                            Source="{Binding Product.ImageUrl}"/>
+                            <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="10"
+                            VerticalOptions="Center">
+                                <VerticalStackLayout>
+                                    <Label 
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="2"
+                                    HorizontalOptions="Start"
+                                    MaximumWidthRequest="{OnPlatform WinUI='550'}"
+                                    FontSize="{OnPlatform WinUI='Small'}"
+                                    TextColor="{StaticResource Primary}" 
+                                    Text="{Binding Product.ProductName}"/>
+                                    <Label 
+                                    FontSize="{OnPlatform Android='Micro', WinUI='Body'}"
+                                    TextColor="{StaticResource Tertiary}" 
+                                    Grid.Column="1" 
+                                    LineBreakMode="WordWrap"
+                                    MaxLines="2">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="Product.VolumeOrWeight"/>
+                                                <Binding Path="Product.Unit.Title"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </VerticalStackLayout>
+
+                                <Grid Grid.Column="0" ColumnDefinitions="{OnPlatform Android='auto,auto,auto', WinUI='auto,100,auto'}">
+                                    <BoxView Grid.ColumnSpan="3"
+                                         CornerRadius="50"
+                                         Color="{StaticResource Secondary}"/>
+
+                                    <Label Grid.Column="1"
+                                           Padding="20,8"
+                                       Text="{Binding Quantity, StringFormat='{0} шт.'}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       FontSize="Small"
+                                       TextColor="White"
+                                       FontAttributes="Bold"/>
+
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout
+                            HorizontalOptions="End"
+                            Margin="{OnPlatform WinUI='15,0', Android='10,0'}"
+                            Spacing="5"
+                            Grid.Column="2">
+                                <Label
+                                LineBreakMode="NoWrap"
+                                VerticalTextAlignment="Center" 
+                                HorizontalTextAlignment="Center"
+                                FontAttributes="Bold"
+                                Padding="0"
+                                FontSize="Small" 
+                                TextColor="Black"
+                                Text="{Binding SumPrice, StringFormat='{0} ₽'}">
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="Чек"
+                    Margin="20,10"/>
+        </VerticalStackLayout>
+    </Grid>
+   
+</ContentPage>

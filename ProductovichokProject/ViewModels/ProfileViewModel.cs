@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProductovichokProject.Data.Models;
 using ProductovichokProject.Services;
+using ProductovichokProject.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,13 @@ namespace ProductovichokProject.ViewModels
             _orderService = orderService;
             Task.Run(() => { Orders = _orderService.GetOrders(_userService.UserInfo.UserId).Result; });
             UserName = _userService.UserInfo.TelegramUserNickname;
+        }
+
+        [RelayCommand]
+        async void GoToOrderDetailsPage(Order order)
+        {
+            _orderService.SelectedOrder = order;
+            await _pageService.GoToPageAsync(nameof(OrderDetailsPage));
         }
     }
 }

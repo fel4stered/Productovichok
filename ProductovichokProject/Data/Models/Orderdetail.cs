@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductovichokProject.Data.Models;
 
@@ -18,4 +19,13 @@ public partial class Orderdetail
     public virtual Order Order { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
+
+    [NotMapped]
+    public int SumPrice 
+    { 
+        get 
+        {
+            return PriceAtOrder * Quantity;
+        }
+    }
 }

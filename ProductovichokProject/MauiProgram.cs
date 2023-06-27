@@ -49,6 +49,8 @@ namespace ProductovichokProject
             builder.Services.AddTransient<ProfilePage>();
             builder.Services.AddTransient<ProfileViewModel>();
 
+            builder.Services.AddTransient<OrderDetailsPage>();
+            builder.Services.AddTransient<OrderDetailsViewModel>();
             #endregion
 
             builder.Services.AddSingleton<UserService>();
