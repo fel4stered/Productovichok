@@ -7,34 +7,16 @@
              x:Class="ProductovichokProject.Views.ClientOrderPage"
              Title="ClientOrderPage">
     <Grid RowSpacing="5" RowDefinitions="0.1*,auto,*,auto" >
-        <Grid Grid.Row="0" ColumnDefinitions="*, *">
+        <Grid Grid.Row="0">
             <BoxView Grid.ColumnSpan="3"
                          Color="{StaticResource Primary}"/>
-            <HorizontalStackLayout
-                Grid.Column="0"
-                Margin="10,0,0,0"
-                Spacing="5"
-                HorizontalOptions="Start"
-                VerticalOptions="Center">
-                <Label Text="Продуктовичок"
-                       Grid.Column="0"
-                       FontSize="Medium"
-                       TextColor="White"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"
-                       Margin="20,0,0,0"/>
-            </HorizontalStackLayout>
-
-            <ImageButton
-                CornerRadius="20"
-                BackgroundColor="{StaticResource Blue200Accent}"
-                VerticalOptions="Center"
-                Padding="5"
-                Margin="0,0,10,0"
-                HorizontalOptions="EndAndExpand"
-                Aspect="Center"
-                Grid.Column="2"
-                Source="user.png"/>
+            <Label Text="Продуктовичок"
+                    Grid.Column="0"
+                    FontSize="Medium"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    Margin="50,0,0,0"/>
         </Grid>
         <VerticalStackLayout
             MaximumWidthRequest="200"
@@ -57,27 +39,29 @@
             VerticalOptions="Center"
             HorizontalOptions="End"
             Text="{Binding CartPrice, StringFormat='Итого: {0} ₽'}"/>
-        <CollectionView 
+
+        <ScrollView
+            Grid.Row="2">
+            <CollectionView 
             ItemSizingStrategy="MeasureFirstItem"
             ItemsLayout="VerticalGrid,1"
             Margin="0,30,0,0"
             HorizontalOptions="Center"
-            ItemsSource="{Binding AllCart}"
-            Grid.Row="2">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type model:Cart}">
-                    <Grid Margin="0,10" ColumnDefinitions="{OnPlatform WinUI='150,*,auto', Android='100,*,auto'}">
-                        <Image 
+            ItemsSource="{Binding AllCart}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type model:Cart}">
+                        <Grid Margin="0,10" ColumnDefinitions="{OnPlatform WinUI='150,*,auto', Android='100,*,auto'}">
+                            <Image 
                             Grid.Column="0"
                             HeightRequest="{OnPlatform Android='100', WinUI='150'}" 
                             WidthRequest="{OnPlatform Android='100', WinUI='150'}"
                             Source="{Binding Product.ImageUrl}"/>
-                        <VerticalStackLayout
+                            <VerticalStackLayout
                             Grid.Column="1"
                             Spacing="10"
                             VerticalOptions="Center">
-                            <VerticalStackLayout>
-                                <Label 
+                                <VerticalStackLayout>
+                                    <Label 
                                     LineBreakMode="TailTruncation"
                                     MaxLines="2"
                                     HorizontalOptions="Start"
@@ -85,27 +69,27 @@
                                     FontSize="{OnPlatform WinUI='Small'}"
                                     TextColor="{StaticResource Primary}" 
                                     Text="{Binding Product.ProductName}"/>
-                                <Label 
+                                    <Label 
                                     FontSize="{OnPlatform Android='Micro', WinUI='Body'}"
                                     TextColor="{StaticResource Tertiary}" 
                                     Grid.Column="1" 
                                     LineBreakMode="WordWrap"
                                     MaxLines="2">
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} {1}">
-                                            <Binding Path="Product.VolumeOrWeight"/>
-                                            <Binding Path="Product.Unit.Title"/>
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
-                            </VerticalStackLayout>
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="Product.VolumeOrWeight"/>
+                                                <Binding Path="Product.Unit.Title"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </VerticalStackLayout>
 
-                            <Grid Grid.Column="0" ColumnDefinitions="{OnPlatform Android='auto,auto,auto', WinUI='auto,100,auto'}">
-                                <BoxView Grid.ColumnSpan="3"
+                                <Grid Grid.Column="0" ColumnDefinitions="{OnPlatform Android='auto,auto,auto', WinUI='auto,100,auto'}">
+                                    <BoxView Grid.ColumnSpan="3"
                                          CornerRadius="50"
                                          Color="{StaticResource Secondary}"/>
 
-                                <Button Text="-"
+                                    <Button Text="-"
                                         FontSize="Medium"
                                         BackgroundColor="{StaticResource Secondary}"
                                         VerticalOptions="Center"
@@ -116,7 +100,7 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ClientOrderViewModel}}, Path=RemoveProductFromCartCommand}"
                                         CommandParameter="{Binding .}"/>
 
-                                <Label Grid.Column="1"
+                                    <Label Grid.Column="1"
                                        Text="{Binding Count}"
                                        VerticalOptions="Center"
                                        HorizontalOptions="Center"
@@ -124,7 +108,7 @@
                                        TextColor="White"
                                        FontAttributes="Bold"/>
 
-                                <Button Text="+"
+                                    <Button Text="+"
                                         FontSize="Small"
                                         BackgroundColor="{StaticResource Secondary}"
                                         VerticalOptions="Center"
@@ -134,15 +118,15 @@
                                         CornerRadius="50"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ClientOrderViewModel}}, Path=AddProductToCartCommand}"
                                         CommandParameter="{Binding .}"/>
-                            </Grid>
-                        </VerticalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
 
-                        <HorizontalStackLayout
+                            <HorizontalStackLayout
                             HorizontalOptions="End"
                             Margin="{OnPlatform WinUI='15,0', Android='10,0'}"
                             Spacing="5"
                             Grid.Column="2">
-                            <Label 
+                                <Label 
                                 LineBreakMode="NoWrap"
                                 VerticalTextAlignment="Center" 
                                 HorizontalTextAlignment="Center"
@@ -152,18 +136,18 @@
                                 FontSize="Small" 
                                 TextColor="LightSlateGray"
                                 Text="{Binding SumPrice, StringFormat='{0} ₽'}">
-                                <Label.Style>
-                                    <Style TargetType="Label">
-                                        <Setter Property="IsVisible" Value="Visible"/>
-                                        <Style.Triggers>
-                                            <DataTrigger TargetType="Label" Binding="{Binding Product.Discount}" Value="0">
-                                                <Setter Property="IsVisible" Value="Hidden"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Label.Style>
-                            </Label>
-                            <Label
+                                    <Label.Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="IsVisible" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Product.Discount}" Value="0">
+                                                    <Setter Property="IsVisible" Value="Hidden"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style>
+                                </Label>
+                                <Label
                                 LineBreakMode="NoWrap"
                                 VerticalTextAlignment="Center" 
                                 HorizontalTextAlignment="Center"
@@ -172,12 +156,13 @@
                                 FontSize="Small" 
                                 TextColor="Black"
                                 Text="{Binding SumDiscountPrice, StringFormat='{0} ₽'}">
-                            </Label>
-                        </HorizontalStackLayout>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
         <Button
             Command="{Binding CreateOrderCommand}"
             FontSize="Medium"

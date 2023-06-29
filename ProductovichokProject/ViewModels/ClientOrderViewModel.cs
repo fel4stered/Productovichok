@@ -1,7 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProductovichokProject.Data.Models;
 using ProductovichokProject.Services;
+using ProductovichokProject.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,7 +35,10 @@ namespace ProductovichokProject.ViewModels
             _pageService = pageService;
             AllCart = _productService.Cart;
             CartUpdate();
-            SelectUserAddress = $"ул. {_userService.SelectedUserAddress.Address.Street.StreetName}, дом {_userService.SelectedUserAddress.Address.HouseId}, квартира " + (_userService.SelectedUserAddress.Appartament.ToString() ?? "не указана") + ", подъезд " + (_userService.SelectedUserAddress.Entrance.ToString() ?? "не указан") + ", этаж " + _userService.SelectedUserAddress.Floor.ToString() ?? "не указан";
+            string app = _userService.SelectedUserAddress.Appartament.ToString() == string.Empty ? "не указана" : _userService.SelectedUserAddress.Appartament.ToString();
+            string pod = _userService.SelectedUserAddress.Entrance.ToString() == string.Empty ? "не указан" : _userService.SelectedUserAddress.Entrance.ToString();
+            string floor = _userService.SelectedUserAddress.Floor.ToString() == string.Empty ? "не указан" : _userService.SelectedUserAddress.Floor.ToString();
+            SelectUserAddress = $"ул. {_userService.SelectedUserAddress.Address.Street.StreetName}, дом {_userService.SelectedUserAddress.Address.HouseId}, квартира {app}, подъезд {pod}, этаж {floor}";
         }
 
         void CartUpdate()
@@ -52,9 +57,12 @@ namespace ProductovichokProject.ViewModels
                 AddressId = _userService.SelectedUserAddress.AddressId,
                 TotalPrice = CartPrice,
                 OrderDateTime = DateTime.Now,
-                OrderComment = "ээ сука ебать нихуя"
             };
             await _productService.AddClientOrder(order);
+            var toast = Toast.Make("Спасибо за заказ! Наши сотрудники уже начали его сборку!", CommunityToolkit.Maui.Core.ToastDuration.Long);
+            await toast.Show();
+            _productService.Cart = new ObservableCollection<Cart>();
+            await _pageService.GoToPageAsync("..");
         }
 
         [RelayCommand]

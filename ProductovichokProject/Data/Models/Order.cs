@@ -25,9 +25,11 @@ public partial class Order
 
     public string OrderComment { get; set; }
 
-    public string BoxNumber { get; set; }
+    public int? BoxNumber { get; set; }
 
     public virtual Address Address { get; set; }
+
+    public virtual ICollection<Check> Checks { get; set; } = new List<Check>();
 
     public virtual User Client { get; set; }
 

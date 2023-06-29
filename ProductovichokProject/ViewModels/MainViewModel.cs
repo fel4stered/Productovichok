@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿    using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProductovichokProject.Services;
 using ProductovichokProject.Views;
@@ -45,7 +45,12 @@ namespace ProductovichokProject.ViewModels
                     
                     if (await _userService.Authorization(Nickname, CodeInt))
                     {
-                        await _pageService.GoToPageAsync(nameof(ClientMainPage));
+                        if (_userService.UserInfo.RoleId == 1)
+                        {
+                            await _pageService.GoToPageAsync(nameof(ClientMainPage));
+                        }                        
+                        else if (_userService.UserInfo.RoleId == 2)
+                            await _pageService.GoToPageAsync(nameof(PickerMainPage));
                     }
                     else
                     {

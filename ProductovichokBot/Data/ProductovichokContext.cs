@@ -20,6 +20,8 @@ public partial class ProductovichokContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Check> Checks { get; set; }
+
     public virtual DbSet<Code> Codes { get; set; }
 
     public virtual DbSet<House> Houses { get; set; }
@@ -44,7 +46,8 @@ public partial class ProductovichokContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok", ServerVersion.Parse("8.0.25-mysql"));
+       => optionsBuilder.UseMySql("server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok", ServerVersion.Parse("8.0.25-mysql"));
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -83,6 +86,23 @@ public partial class ProductovichokContext : DbContext
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Check>(entity =>
+        {
+            entity.HasKey(e => e.ChecksId).HasName("PRIMARY");
+
+            entity.HasIndex(e => e.OrderId, "OrderId_idx");
+
+            entity.HasIndex(e => e.UserId, "UserId_idx");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.Checks)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("OrderId1");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Checks)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("UserId1");
         });
 
         modelBuilder.Entity<Code>(entity =>
@@ -134,7 +154,6 @@ public partial class ProductovichokContext : DbContext
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.AddressId).HasColumnName("AddressID");
-            entity.Property(e => e.BoxNumber).HasMaxLength(50);
             entity.Property(e => e.ClientId).HasColumnName("ClientID");
             entity.Property(e => e.CourierId).HasColumnName("CourierID");
             entity.Property(e => e.DeliveryDateTime).HasColumnType("datetime");
@@ -177,7 +196,6 @@ public partial class ProductovichokContext : DbContext
 
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
-            entity.Property(e => e.PriceAtOrder).HasPrecision(10, 2);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Orderdetails)

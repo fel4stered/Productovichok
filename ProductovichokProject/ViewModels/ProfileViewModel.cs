@@ -23,6 +23,8 @@ namespace ProductovichokProject.ViewModels
         [ObservableProperty]
         string userName;
 
+        bool isGoTo;
+
         public ProfileViewModel(UserService userService, PageService pageService, ProductService productService, OrderService orderService)
         {
             _userService = userService;
@@ -36,8 +38,18 @@ namespace ProductovichokProject.ViewModels
         [RelayCommand]
         async void GoToOrderDetailsPage(Order order)
         {
-            _orderService.SelectedOrder = order;
-            await _pageService.GoToPageAsync(nameof(OrderDetailsPage));
+            if(isGoTo == false)
+            {
+                isGoTo = true;
+                _orderService.SelectedOrder = order;
+                await _pageService.GoToPageAsync(nameof(OrderDetailsPage));
+            }
+        }
+
+        [RelayCommand]
+        void OnAppearing()
+        {
+            isGoTo = false;
         }
     }
 }

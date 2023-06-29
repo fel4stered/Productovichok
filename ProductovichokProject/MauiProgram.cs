@@ -51,6 +51,12 @@ namespace ProductovichokProject
 
             builder.Services.AddTransient<OrderDetailsPage>();
             builder.Services.AddTransient<OrderDetailsViewModel>();
+
+            builder.Services.AddTransient<PickerMainPage>();
+            builder.Services.AddTransient<PickerMainViewModel>();
+
+            builder.Services.AddTransient<PickerOrderDetailPage>();
+            builder.Services.AddTransient<PickerOrderDetailViewModel>();
             #endregion
 
             builder.Services.AddSingleton<UserService>();

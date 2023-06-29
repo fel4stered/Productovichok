@@ -21,9 +21,9 @@ public partial class Orderdetail
     public virtual Product Product { get; set; } = null!;
 
     [NotMapped]
-    public int SumPrice 
-    { 
-        get 
+    public int SumPrice
+    {
+        get
         {
             return PriceAtOrder * Quantity;
         }

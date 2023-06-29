@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:model="clr-namespace:ProductovichokProject.Data.Models"
+             x:DataType="viewmodel:PickerMainViewModel"
+             x:Class="ProductovichokProject.Views.PickerMainPage"
+             Title="PickerMainPage">
+
+    <Grid RowDefinitions="0.08*,*" RowSpacing="10">
+        <Grid Grid.Row="0" >
+            <BoxView Grid.ColumnSpan="3"
+                         Color="{StaticResource Primary}"/>
+            <Label Text="Продуктовичок"
+                    Grid.Column="0"
+                    FontSize="Medium"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    Margin="50,0,0,0"/>
+        </Grid>
+        <VerticalStackLayout Grid.Row="1">
+            <Border
+                BackgroundColor="#56ACFF"
+                StrokeThickness="0"
+                Margin="8,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+                <Label
+                    Padding="0,8"
+                    Text="Заказы на сборку"
+                    TextColor="White"
+                    HorizontalOptions="Center"
+                    FontSize="Medium"/>
+            </Border>
+            <ScrollView>
+                <CollectionView
+                Margin="20,10"
+                ItemSizingStrategy="MeasureFirstItem"
+                ItemsSource="{Binding Orders}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Order">
+                            <Grid ColumnDefinitions="1*,*,0.5*">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PickerMainViewModel}}, Path=GoToOrderDetailsPageCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+                                <Border Grid.Column="0"
+                                BackgroundColor="#56ACFF"
+                                StrokeThickness="0"
+                                Padding="0,8">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+                                    <Label
+                                   Padding="10,0"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0}, {1}">
+                                                <Binding Path="Address.Street.StreetName"/>
+                                                <Binding Path="Address.HouseId"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </Border>
+                                <Label
+                               Text="{Binding Status.StatusName}"
+                               Grid.Column="1"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                                <Label Text="{Binding TotalPrice, StringFormat='{0} ₽'}" 
+                               Grid.Column="2"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

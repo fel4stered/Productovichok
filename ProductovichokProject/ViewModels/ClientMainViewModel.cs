@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProductovichokProject.Data;
 using ProductovichokProject.Data.Models;
 using ProductovichokProject.Services;
 using ProductovichokProject.Views;
@@ -16,6 +17,7 @@ namespace ProductovichokProject.ViewModels
 {
     public partial class ClientMainViewModel : ObservableObject
     {
+        private readonly ProductovichokContext _context;
         private readonly UserService _userService;
         private readonly ProductService _productService;
         private readonly CategoryService _categoryService;
@@ -47,19 +49,24 @@ namespace ProductovichokProject.ViewModels
 
         List<Product> AllProducts;
         List<UserAddress> UserAddresses;
+
+        bool GoToProfilePageCheck = false;
+        bool GoToOrderPageCheck = false;
         
-        public ClientMainViewModel(UserService userService, ProductService productService, CategoryService categoryService, PageService pageService)
+        public ClientMainViewModel(UserService userService, ProductService productService, CategoryService categoryService, PageService pageService, ProductovichokContext context)
         {
             _userService = userService;
             _productService = productService;
             _categoryService = categoryService;
             _pageService = pageService;
+            _context = context;
             UserInfo = _userService.UserInfo;
             Task.Factory.StartNew(() =>
             {
                 AllProducts = _productService.GetProducts().Result.ToList();
                 Products = new ObservableCollection<Product>(AllProducts);
                 Categories = new ObservableCollection<Category>(_categoryService.GetCategories().Result);
+                SelectedCategory = Categories[0];
                 if (_userService.UserAddressesChecker().Result)
                 {
                     UpdateUserAddresses();
@@ -71,16 +78,20 @@ namespace ProductovichokProject.ViewModels
         {
             await Task.Factory.StartNew(() =>
             {
-                if(value is not null)
+                if (value.CategoryId == 1)
                 {
-                    Products = new ObservableCollection<Product>(AllProducts.Where(x => x.CategoryId == value.CategoryId));
+                    Products = new ObservableCollection<Product>(AllProducts);
+                    
                 }
+                else
+                    Products = new ObservableCollection<Product>(AllProducts.Where(x => x.CategoryId == value.CategoryId));
             });
         }
 
         public void UpdateUserAddresses()
         {
             UserAddresses = _userService.GetUserAddresses().Result;
+            _userService.UserAddressesAll = UserAddresses;
             UserAddressesShort = new ObservableCollection<string>(UserAddresses.Select(x => x.Address.Street.StreetName + ", " + x.Address.HouseId)) { "Добавить новый адрес" };
         }
 
@@ -88,7 +99,7 @@ namespace ProductovichokProject.ViewModels
         {
             if (value != -1 && UserAddressesShort[value] == "Добавить новый адрес")
             {
-                var result = await Shell.Current.CurrentPage.ShowPopupAsync(new AddressPopup(_userService.UserInfo, UserAddresses));
+                var result = await Shell.Current.CurrentPage.ShowPopupAsync(new AddressPopup(_userService.UserInfo, UserAddresses,_context));
                 if (result != null)
                 {
                     await _userService.AddUserAddress((UserAddress)result);
@@ -141,6 +152,7 @@ namespace ProductovichokProject.ViewModels
                 Cart.Remove(selectedProductInCart);
             }
             CartUpdate();
+
         }
 
         void CartUpdate()
@@ -154,8 +166,13 @@ namespace ProductovichokProject.ViewModels
         {   
             if(AddressPickerSelectedIndex != -1)
             {
-                _userService.SelectedUserAddress = UserAddresses[AddressPickerSelectedIndex];
-                await _pageService.GoToPageAsync(nameof(ClientOrderPage));
+                if(GoToOrderPageCheck == false)
+                {
+                    GoToOrderPageCheck = true;
+                    _userService.SelectedUserAddress = UserAddresses[AddressPickerSelectedIndex];
+                    await _pageService.GoToPageAsync(nameof(ClientOrderPage));
+                }
+                
             }
             else
                 await Application.Current.MainPage.DisplayAlert("", "Выберите адрес доставки!", "Окей");
@@ -164,6 +181,8 @@ namespace ProductovichokProject.ViewModels
         [RelayCommand]
         void OnAppearing()
         {
+            GoToProfilePageCheck = false;
+            GoToOrderPageCheck = false;
             if (_productService.Cart is not null)
             {
                 Cart = _productService.Cart;
@@ -174,7 +193,12 @@ namespace ProductovichokProject.ViewModels
         [RelayCommand]
         async void GoToProfilePage()
         {
-            await _pageService.GoToPageAsync(nameof(ProfilePage));
+            if(GoToProfilePageCheck == false)
+            {
+                GoToProfilePageCheck = true;
+                await _pageService.GoToPageAsync(nameof(ProfilePage));
+            }
+            
         }
     }
 }

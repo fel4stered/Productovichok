@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 
 internal class Program
 {
@@ -48,42 +49,53 @@ internal class Program
             Console.WriteLine("skipping old update");
         else if (!string.IsNullOrWhiteSpace(message.Text))
         {
-            if (message.Text.ToLower() == "/reg")
+            switch (message.Text.ToLower())
             {
-                if (UserService.RegistrationCheck((int)message.Chat.Id))
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "Вы уже зарегистрированы. Введите команду '/code', чтобы получить проверочный код для авторизации. ");
+                case "/reg":
+                    if (UserService.RegistrationCheck((int)message.Chat.Id))
+                    {
+                        await botClient.SendTextMessageAsync(message.Chat.Id, "Вы уже зарегистрированы. Введите команду '/code', чтобы получить проверочный код для авторизации. ");
+                        return;
+                    }
+                    else
+                    {
+                        UserService.Registration((int)message.Chat.Id, message.Chat.Username, message.Chat.FirstName);
+                        await botClient.SendTextMessageAsync(message.Chat.Id, "Вы успешно зарегистрировались. Введите команду '/code', чтобы получить проверочный код для авторизации.");
+                        return;
+                    }
+                case "/code":
+                    if (UserService.AuthorizationCheck((int)message.Chat.Id))
+                    {
+                        await botClient.SendTextMessageAsync(message.Chat.Id, "Вы уже получили код для авторизации.");
+                        return;
+                    }
+                    else
+                    {
+                        string code = CodeGenerate();
+                        UserService.Authorization((int)message.Chat.Id, Int32.Parse(code));
+                        await botClient.SendTextMessageAsync(message.Chat.Id, $"Ваш код: `{code}`. Код действует в течение 5 минут. " +
+                            $"Новый можно будет получить, когда данный код перестанет быть действительным ", parseMode: ParseMode.Markdown);
+                        return;
+                    }
+                case "чек":
+                        List<string> results = UserService.CreatePdfCheck((int)message.Chat.Id);
+                        if (results is not null)
+                        {
+                            foreach(string result in results)
+                            {
+                                using Stream stream = System.IO.File.OpenRead($"../net7.0/{result}");
+                                await botClient.SendDocumentAsync(message.Chat.Id, InputFile.FromStream(stream: stream, fileName: result));
+                            }
+                        }
+                        else
+                        {
+                            await botClient.SendTextMessageAsync(message.Chat.Id, "Не найдена заявка на чек.");
+                        }
                     return;
-                }
-                else
-                {
-
-                    UserService.Registration((int)message.Chat.Id, message.Chat.Username, message.Chat.FirstName);
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "Вы успешно зарегистрировались. Введите команду '/code', чтобы получить проверочный код для авторизации.");
+                default:
+                    await botClient.SendTextMessageAsync(message.Chat.Id, "Такой комманды не существует. " +
+                        "Если вы не зарегистрированы, то сделайте это с помощью комманды '/reg' или же получите проверочный код для авторизации с помощью комманды '/code'");
                     return;
-                }
-            }
-            else if (message.Text.ToLower() == "/code")
-            {
-                if (UserService.AuthorizationCheck((int)message.Chat.Id))
-                {
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "Вы уже получили код для авторизации.");
-                    return;
-                }
-                else
-                {
-                    string code = CodeGenerate();
-                    UserService.Authorization((int)message.Chat.Id, Int32.Parse(code));
-                    await botClient.SendTextMessageAsync(message.Chat.Id, $"Ваш код: `{code}`. Код действует в течение 5 минут. " +
-                        $"Новый можно будет получить, когда данный код перестанет быть действительным ", parseMode: ParseMode.Markdown);
-                    return;
-                }
-            }
-            else
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id, "Такой комманды не существует. " +
-                    "Если вы не зарегистрированы, то сделайте это с помощью комманды '/reg' или же получите проверочный код для авторизации с помощью комманды '/code'");
-                return;
             }
         }
     }
@@ -94,7 +106,7 @@ internal class Program
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var connectionString = "server=192.168.0.123;user=kek;password=1234;database=productovichok";
+        var connectionString = "server=rc1b-kspwzb8gf9wxum7u.mdb.yandexcloud.net;user=kek;password=productovichok2116;database=productovichok";
         var serverVersion = new MySqlServerVersion(new Version(10, 4, 28));
         services.AddDbContext<ProductovichokContext>(
             dbContextOptions => dbContextOptions

@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:ProductovichokProject.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:model="clr-namespace:ProductovichokProject.Data.Models"
-             x:DataType="viewmodel:OrderDetailsViewModel"
-             x:Class="ProductovichokProject.Views.OrderDetailsPage"
-             Title="OrderDetailsPage">
+             x:DataType="viewmodel:PickerOrderDetailViewModel"
+             x:Class="ProductovichokProject.Views.PickerOrderDetailPage"
+             Title="PickerOrderDetailPage">
+    
 
     <Grid RowDefinitions="0.08*,*">
         <Grid Grid.Row="0">
@@ -24,46 +26,15 @@
             <VerticalStackLayout
             Margin="0,16"
             Padding="16,0">
-                <Grid ColumnDefinitions="*,*"
-                  Padding="16,0">
-                    <Label
-                    Grid.Column="0"
-                    Text="{Binding SelectedOrder.OrderId, StringFormat='Заказ #{0}'}"
-                    FontAttributes="Bold"
-                    TextColor="{StaticResource Primary}"
-                    FontSize="{OnPlatform Android='Title', WinUI='Large'}"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"/>
-                    <Label
-                    Grid.Column="1"
-                    FontSize="{OnPlatform Android='Body', WinUI='Medium'}"
-                    FontAttributes="Bold"
-                    Text="{Binding SelectedOrder.Status.StatusName}"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
-                        <Label.Style>
-                            <Style TargetType="Label">
-                                <Style.Triggers>
-                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="1">
-                                        <Setter Property="TextColor" Value="#FF9800"/>
-                                    </DataTrigger>
-                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="2">
-                                        <Setter Property="TextColor" Value="#FFC107"/>
-                                    </DataTrigger>
-                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="3">
-                                        <Setter Property="TextColor" Value="#4CAF50"/>
-                                    </DataTrigger>
-                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="4">
-                                        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
-                                    </DataTrigger>
-                                    <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="5">
-                                        <Setter Property="TextColor" Value="MediumVioletRed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Label.Style>
-                    </Label>
-                </Grid>
+                <Label
+                Padding="16,0"
+                Grid.Column="0"
+                Text="{Binding SelectedOrder.OrderId, StringFormat='Заказ #{0}'}"
+                FontAttributes="Bold"
+                TextColor="{StaticResource Primary}"
+                FontSize="{OnPlatform Android='Title', WinUI='Large'}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
                 <Label Text="Адрес доставки:"
                    FontSize="Medium"
                    FontAttributes="Bold"
@@ -77,19 +48,6 @@
                         <Label Text="Время заказа:"/>
                         <Label Text="{Binding SelectedOrder.OrderDateTime}"
                            Margin="0,0,0,5"/>
-                        <Label Text="Время доставки:"/>
-                        <Label>
-                            <Label.Style>
-                                <Style TargetType="Label">
-                                    <Setter Property="Text" Value="-"/>
-                                    <Style.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding SelectedOrder.StatusId}" Value="4">
-                                            <Setter Property="Text" Value="{Binding SelectedOrder.OrderDateTime}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Label.Style>
-                        </Label>
                     </VerticalStackLayout>
                     <Label 
                     FontAttributes="Bold"
@@ -102,12 +60,11 @@
                 <CollectionView 
                 MaximumWidthRequest="{OnPlatform WinUI='1000'}"
                 ItemSizingStrategy="MeasureFirstItem"
-                ItemsLayout="VerticalGrid,1"
                 ItemsSource="{Binding OrderDetails}"
                 Grid.Row="2">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type model:Orderdetail}">
-                            <Grid Margin="0,20" ColumnDefinitions="{OnPlatform WinUI='150,*,auto', Android='100,*,auto'}">
+                            <Grid Margin="0,10" ColumnDefinitions="{OnPlatform WinUI='150,*,auto', Android='100,*,auto'}">
                                 <Image 
                             Grid.Column="0"
                             HeightRequest="{OnPlatform Android='100', WinUI='150'}" 
@@ -178,14 +135,21 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button Text="Чек"
-                    Command="{Binding CheckRequestCommand}"
+                <Entry Placeholder="Номер бокса"
+                   Text="{Binding BoxNumber}"
+                   FontAttributes="Bold"
+                   FontSize="Medium"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center"
+                   MinimumWidthRequest="250"/>
+                <Button Command="{Binding TransferToDeliveryCommand}"
+                    Text="Передать в доставку"
                     Margin="0,16"
                     FontSize="Small"
                     HorizontalOptions="Center"
-                    Padding="48,0"/>
+                    Padding="32,0"/>
             </VerticalStackLayout>
         </ScrollView>
+        
     </Grid>
-   
 </ContentPage>

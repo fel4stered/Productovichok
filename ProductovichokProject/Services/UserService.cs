@@ -17,6 +17,8 @@ namespace ProductovichokProject.Services
 
         public UserAddress SelectedUserAddress { get; set; }
 
+        public List<UserAddress> UserAddressesAll { get; set; }
+
         public UserService(ProductovichokContext context)
         {
             _context = context;
@@ -56,6 +58,15 @@ namespace ProductovichokProject.Services
         {
             await _context.UserAddresses.AddAsync(userAddress);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<UserAddress>> GetAllUserAddresses()
+        {
+            await _context.Addresses.ToListAsync();
+            await _context.Streets.ToListAsync();
+            await _context.Houses.ToListAsync();
+            var UserAddresses = await _context.UserAddresses.ToListAsync();
+            return UserAddresses;
         }
     }
 }

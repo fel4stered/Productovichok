@@ -17,6 +17,8 @@ public partial class User
 
     public string? Surname { get; set; }
 
+    public virtual ICollection<Check> Checks { get; set; } = new List<Check>();
+
     public virtual ICollection<Code> Codes { get; set; } = new List<Code>();
 
     public virtual ICollection<Order> OrderClients { get; set; } = new List<Order>();

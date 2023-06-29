@@ -8,15 +8,16 @@ namespace ProductovichokProject.Views.Popups;
 
 public partial class AddressPopup : Popup
 {
-	private readonly ProductovichokContext _context = new ProductovichokContext();
+    private readonly ProductovichokContext _context;
 	User UserInfo;
     List<UserAddress> UserAddresses;
 
-    public AddressPopup(User userInfo, List<UserAddress> userAddresses)
+    public AddressPopup(User userInfo, List<UserAddress> userAddresses, ProductovichokContext context)
 	{
 		InitializeComponent();
 		UserInfo = userInfo;
         UserAddresses = userAddresses;
+        _context = context;
         _context.Streets.ToList();
         _context.Addresses.ToList();
         StreetPick.ItemsSource = _context.Streets.Select(x => x.StreetName).ToList();
